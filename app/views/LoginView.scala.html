@@ -1,0 +1,73 @@
+@import com.cjwwdev.frontendUI.builders.NavBarLinkBuilder
+@import com.cjwwdev.views.html.templates.AdminMainTemplate
+@import com.cjwwdev.views.html.helpers.{errorPanel, textInput}
+@import helper._
+
+@(login: Form[models.Credentials])(implicit request: Request[_], messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
+
+@AdminMainTemplate(title = messages("pages.user-login.title"), links, navBarRoutes){
+    <div class="top-block-single">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3"></div>
+
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <p class="text-center">
+                                <img src="@routes.Assets.versioned("images/logo.png")" width="50%" alt="CJWW main logo">
+                            </p>
+
+                            <div class="page-header">
+                                <h1 id="main-heading" class="pageTitle text-center">@messages("pages.user-login.heading")</h1>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3"></div>
+                                <div class="col-md-6">
+                                @errorPanel(login)
+                                </div>
+                                <div class="col-md-3"></div>
+                            </div>
+
+                            <form action="@controllers.routes.LoginController.loginSubmit()" method="post">
+
+                                @CSRF.formField
+
+                                @textInput(
+                                    login("username"),
+                                    false,
+                                    '_sassClass   -> "input-group-addon",
+                                    '_label       -> Html(messages("pages.user-login.text-entry.username.label")),
+                                    '_inputType   -> "text",
+                                    '_placeholder -> messages("pages.user-login.text-entry.username.placeholder"),
+                                    '_fieldName   -> "username",
+                                    '_spanId      -> "username-span"
+                                )
+
+                                @textInput(
+                                    login("password"),
+                                    false,
+                                    '_sassClass   -> "input-group-addon",
+                                    '_label       -> Html(messages("pages.user-login.text-entry.password.label")),
+                                    '_inputType   -> "password",
+                                    '_placeholder -> messages("pages.user-login.text-entry.password.placeholder"),
+                                    '_fieldName   -> "password",
+                                    '_spanId      -> "password-span"
+                                )
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <button id="login-button" type="submit" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> @messages("app.common.login")</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+    </div>
+}

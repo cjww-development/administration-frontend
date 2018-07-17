@@ -36,7 +36,7 @@ lazy val microservice = Project(appName, file("."))
   .enablePlugins(PlayScala)
   .settings(scoverageSettings)
   .configs(IntegrationTest)
-  .settings(PlayKeys.playDefaultPort := 9876)
+  .settings(PlayKeys.playDefaultPort := 9875)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
     name                                          :=  appName,
