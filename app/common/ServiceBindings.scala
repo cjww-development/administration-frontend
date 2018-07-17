@@ -17,15 +17,31 @@
 package common
 
 import com.cjwwdev.config.{ConfigurationLoader, DefaultConfigurationLoader}
+import connectors.{AdminConnector, DefaultAdminConnector}
+import controllers.{DashboardController, DefaultDashboardController, DefaultLoginController, LoginController}
 import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module}
+import services.{DefaultLoginService, LoginService}
 
 
 class ServiceBindings extends Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] =
-    bindOther()
+    bindOther() ++ bindConnectors() ++ bindServices() ++ bindControllers()
 
   private def bindOther(): Seq[Binding[_]] = Seq(
     bind(classOf[ConfigurationLoader]).to(classOf[DefaultConfigurationLoader]).eagerly()
+  )
+
+  private def bindConnectors(): Seq[Binding[_]] = Seq(
+    bind(classOf[AdminConnector]).to(classOf[DefaultAdminConnector]).eagerly()
+  )
+
+  private def bindServices(): Seq[Binding[_]] = Seq(
+    bind(classOf[LoginService]).to(classOf[DefaultLoginService]).eagerly()
+  )
+
+  private def bindControllers(): Seq[Binding[_]] = Seq(
+    bind(classOf[LoginController]).to(classOf[DefaultLoginController]).eagerly(),
+    bind(classOf[DashboardController]).to(classOf[DefaultDashboardController]).eagerly()
   )
 }

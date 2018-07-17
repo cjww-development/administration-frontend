@@ -23,9 +23,9 @@ object AppDependencies {
 
 private object CompileDependencies {
   private val httpVerbsVersion     = "3.1.0"
-  private val authorisationVersion = "4.2.0"
+  private val authorisationVersion = "4.3.0"
   private val appUtilsVersion      = "4.1.0"
-  private val frontendUIVersion    = "2.2.0"
+  private val frontendUIVersion    = "2.6.0"
   private val serviceHealthVersion = "0.2.0"
 
   private val playImports: Seq[ModuleID] = Seq(filters, guice)
@@ -49,7 +49,8 @@ private trait TestDependencies {
 private object UnitTestDependencies extends TestDependencies {
   override val scope: Configuration = Test
   override val testDependencies: Seq[ModuleID] = Seq(
-    "com.cjww-dev.libs" % "testing-framework_2.12" % "3.2.0" % scope
+    "com.cjww-dev.libs" % "testing-framework_2.12" % "3.2.0"  % scope,
+    "org.jsoup"         % "jsoup"                  % "1.11.3" % scope
   )
 
   def apply(): Seq[ModuleID] = testDependencies
