@@ -14,15 +14,8 @@
  * limitations under the License.
  */
 
-package models
+package common
 
-import play.api.libs.json.{Json, OFormat}
-
-case class AccountDetails(managementId: String,
-                          username: String,
-                          email: String,
-                          permissions: List[String])
-
-object AccountDetails {
-  implicit val format: OFormat[AccountDetails] = Json.format[AccountDetails]
+object Permissions {
+  val rootOnly = List("all")
 }

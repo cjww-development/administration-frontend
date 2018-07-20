@@ -1,0 +1,23 @@
+@import com.cjwwdev.frontendUI.builders.NavBarLinkBuilder
+@import com.cjwwdev.views.html.templates.AdminMainTemplate
+@import com.cjwwdev.views.html.helpers.{errorPanel, textInput}
+@import helper._
+
+@()(implicit request: Request[_], messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
+
+@AdminMainTemplate(title = messages("pages.incorrect-permissions.title"), links, navBarRoutes){
+    <div class="top-block">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="@routes.Assets.versioned("images/logo.png")" width="100%" alt="CJWW Main logo">
+                </div>
+
+                <div class="col-md-8">
+                    <h1 id="main-heading">@messages("pages.incorrect-permissions.heading")</h1>
+                    <p id="error-message">@messages("pages.incorrect-permissions.body")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

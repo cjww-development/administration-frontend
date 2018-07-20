@@ -22,7 +22,7 @@ import controllers.routes
 
 trait AppConfig {
   implicit def serviceLinks(implicit requestHeader: RequestHeader): Seq[NavBarLinkBuilder] = {
-    Seq(NavBarLinkBuilder("/", "glyphicon-home", "Home", "home"))
+    Seq(NavBarLinkBuilder(routes.DashboardController.dashboard().url, "glyphicon-home", "Home", "home"))
   }
 
   implicit def standardNavBarRoutes(implicit requestHeader: RequestHeader): Map[String, Call] = Map(
@@ -30,7 +30,7 @@ trait AppConfig {
     "globalAssets" -> routes.Assets.versioned("stylesheets/global-assets.css"),
     "favicon"      -> routes.Assets.versioned("images/favicon.ico"),
     "login"        -> routes.LoginController.login(),
-    "dashboard"    -> Call("GET", "/"),
+    "dashboard"    -> routes.DashboardController.dashboard(),
     "signOut"      -> routes.LoginController.signOut()
   )
 }

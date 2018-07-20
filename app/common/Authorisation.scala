@@ -16,10 +16,13 @@
 
 package common
 
+import com.cjwwdev.frontendUI.builders.NavBarLinkBuilder
 import com.cjwwdev.logging.Logging
 import connectors.AdminConnector
 import models.AccountDetails
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc._
+import views.html.IncorrectPermissionsView
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -31,7 +34,7 @@ trait Authorisation extends Logging {
 
   private type AuthorisedAction = Request[AnyContent] => AccountDetails => Future[Result]
 
-  def isAuthorised(f: => AuthorisedAction): Action[AnyContent] = Action.async { implicit request =>
+  protected def isAuthorised(f: => AuthorisedAction): Action[AnyContent] = Action.async { implicit request =>
     request.session.get("cookieId") match {
       case Some(id) => adminConnector.getManagementUser(id) flatMap { user =>
         logger.info(s"Authenticated as ${user.managementId} on ${request.path}")
@@ -40,6 +43,17 @@ trait Authorisation extends Logging {
       case None     =>
         logger.warn(s"Unauthenticated user attempting to access ${request.path}; redirecting to login")
         Action(Redirect(controllers.routes.LoginController.login()))(request)
+    }
+  }
+
+  protected def permissionsGuard(usersPermissions: List[String], routePermissions: List[String])
+                      (f: => Future[Result])
+                      (implicit request: Request[_], lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call]): Future[Result] = {
+    val allowances = usersPermissions.map(permission => routePermissions.contains(permission))
+    if(allowances.contains(true)) {
+      f
+    } else {
+      Future(Forbidden(IncorrectPermissionsView()))
     }
   }
 }

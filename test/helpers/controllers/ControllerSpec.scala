@@ -31,8 +31,7 @@ trait ControllerSpec
     with FutureAsserts
     with Fixtures
     with MockLoginService
-    with MockAdminConnector
-    with GuiceOneAppPerSuite {
+    with MockAdminConnector {
 
   implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest()

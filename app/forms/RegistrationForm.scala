@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package models
+package forms
 
-import play.api.libs.json.{Json, OFormat}
+import models.Registration
+import play.api.data.Form
+import play.api.data.Forms._
+import forms.validation.RegistrationValidation._
 
-case class AccountDetails(managementId: String,
-                          username: String,
-                          email: String,
-                          permissions: List[String])
-
-object AccountDetails {
-  implicit val format: OFormat[AccountDetails] = Json.format[AccountDetails]
+object RegistrationForm {
+  val form = Form(
+    mapping(
+      "username"        -> userNameValidation,
+      "email"           -> emailAddressValidation,
+      "password"        -> passwordValidation,
+      "confirmPassword" -> confirmPasswordValidation,
+      "permissions"     -> hasTextBeenEntered("permissions")
+    )(Registration.apply)(Registration.unapply).verifying(xPasswordValidation)
+  )
 }

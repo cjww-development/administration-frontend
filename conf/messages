@@ -14,12 +14,51 @@
 # limitations under the License.
 #
 
-app.common.login                                =Login
+app.common.login                                    =Login
+app.common.register                                 =Register
 
-pages.user-login.title                          =Login
-pages.user-login.heading                        =Login
-pages.user-login.text-entry.username.label      =Username
-pages.user-login.text-entry.password.label      =Password
-pages.user-login.text-entry.username.placeholder=Your username
-pages.user-login.text-entry.password.placeholder=Your password
-pages.user-login.text-entry.login-error         =Either your user name or password wasn't correct
+components.quick-links.register                     =Register new user
+components.quick-links.view-users                   =Views all users
+
+pages.incorrect-permissions.title                   =You are not allowed here
+pages.incorrect-permissions.heading                 =Woah
+pages.incorrect-permissions.body                    =You do not have sufficient privileges to see this page
+
+pages.user-login.title                              =Login
+pages.user-login.heading                            =Login
+pages.user-login.text-entry.username.label          =Username
+pages.user-login.text-entry.password.label          =Password
+pages.user-login.text-entry.username.placeholder    =Your username
+pages.user-login.text-entry.password.placeholder    =Your password
+pages.user-login.text-entry.login-error             =Either your user name or password wasn't correct
+
+pages.dashboard.quick-links.title                   =Dashboard
+pages.dashboard.quick-links.heading                 =Quick links
+pages.dashboard.main-content.heading                =Welcome to the admin dashboard
+pages.dashboard.main-content.register               =Register new user
+pages.dashboard.main-content.view-users             =View all users
+
+pages.registration.main-content.heading             =Register new admin user
+pages.registration.form.username.label              =Username
+pages.registration.form.username.placeholder        =Enter the new users user name they will login with
+pages.registration.form.email.label                 =Email
+pages.registration.form.email.placeholder           =Enter the new users email address
+pages.registration.form.password.label              =Password
+pages.registration.form.password.placeholder        =Enter the new users password
+pages.registration.form.confirm-password.label      =Confirm password
+pages.registration.form.confirm-password.placeholder=Confirm the new users password
+pages.registration.form.permissions.label           =Permissions
+pages.registration.form.permissions.placeholder     =Enter the users permissions; separated by a comma
+pages.registration.errors.failed-register           =There was a problem registering the new user
+
+pages.users-overview.title                          =All registered users
+pages.users-overview.heading                        =All registered users
+
+pages.view-users.title                              =Details for user {0}
+pages.view-users.heading                            =Details for user {0}
+pages.view-users.management-id                      =Management Id:
+pages.view-users.username                           =User name:
+pages.view-users.email                              =Email:
+pages.view-users.permissions                        =Permissions:
+pages.view-users.delete                             =Delete user
+pages.view-users.cannot-delete                      =You can cannot delete your own account

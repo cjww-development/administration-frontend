@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2018 CJWW Development
  *
@@ -17,14 +16,17 @@
 
 package controllers
 
-import common.{Authorisation, FrontendController}
-import connectors.AdminConnector
+import com.cjwwdev.http.exceptions.ForbiddenException
 import javax.inject.Inject
+import common.{Authorisation, FrontendController, Permissions}
+import connectors.AdminConnector
+import forms.RegistrationForm
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import views.html.DashboardView
+import views.html.{DashboardView, RegisterNewUserView, UserView, UsersOverviewView}
+import views.html.StandardErrorView
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class DefaultDashboardController @Inject()(val controllerComponents: ControllerComponents,
                                            val adminConnector: AdminConnector) extends DashboardController
@@ -35,4 +37,48 @@ trait DashboardController extends FrontendController with Authorisation {
     Future(Ok(DashboardView()))
   }
 
+  def registerUser(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
+    permissionsGuard(user.permissions, Permissions.rootOnly) {
+      Future(Ok(RegisterNewUserView(RegistrationForm.form)))
+    }
+  }
+
+  def registerUserSubmit(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
+    permissionsGuard(user.permissions, Permissions.rootOnly) {
+      RegistrationForm.form.bindFromRequest.fold(
+        errors  => Future(BadRequest(RegisterNewUserView(errors))),
+        newUser => adminConnector.registerNewUser(newUser) map {
+          if(_) {
+            Redirect(routes.DashboardController.usersOverview())
+          } else {
+            InternalServerError(StandardErrorView(messagesApi("pages.registration.errors.failed-register")))
+          }
+        }
+      )
+    }
+  }
+
+  def usersOverview(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
+    permissionsGuard(user.permissions, Permissions.rootOnly) {
+      adminConnector.getAllManagementUsers map {
+        users => Ok(UsersOverviewView(users))
+      }
+    }
+  }
+
+  def viewUser(managementId: String): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
+    permissionsGuard(user.permissions, Permissions.rootOnly) {
+      adminConnector.getManagementUser(managementId) map {
+        acc => Ok(UserView(acc))
+      }
+    }
+  }
+
+  def deleteUser(managementId: String): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
+    permissionsGuard(user.permissions, Permissions.rootOnly) {
+      adminConnector.deleteManagementUser(managementId) map {
+        _ => Redirect(routes.DashboardController.usersOverview())
+      }
+    }
+  }
 }

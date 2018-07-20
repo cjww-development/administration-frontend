@@ -21,9 +21,10 @@ import com.cjwwdev.http.exceptions.{ForbiddenException, ServerErrorException}
 import com.cjwwdev.http.responses.WsResponseHelpers
 import com.cjwwdev.http.verbs.Http
 import javax.inject.Inject
-import models.{Account, AccountDetails, Credentials}
+
+import models.{Account, AccountDetails, Credentials, Registration}
 import play.api.libs.json.OFormat
-import play.api.http.Status.OK
+import play.api.http.Status.{OK, NO_CONTENT}
 import play.api.mvc.Request
 
 import scala.concurrent.Future
@@ -39,8 +40,8 @@ trait AdminConnector extends WsResponseHelpers {
 
   val adminUrl: String
 
-  def registerNewUser(account: Account)(implicit format: OFormat[Account], request: Request[_]): Future[Boolean] = {
-    http.post(s"$adminUrl/register", account) map {
+  def registerNewUser(registration: Registration)(implicit format: OFormat[Registration], request: Request[_]): Future[Boolean] = {
+    http.post(s"$adminUrl/register", registration) map {
       _ => true
     } recover {
       case _: ServerErrorException => false
@@ -61,6 +62,23 @@ trait AdminConnector extends WsResponseHelpers {
   def getManagementUser(managementId: String)(implicit request: Request[_]): Future[AccountDetails] = {
     http.get(s"$adminUrl/user/$managementId") map {
       _.toDataType[AccountDetails](needsDecrypt = true)
+    }
+  }
+
+  def getAllManagementUsers(implicit request: Request[_]): Future[List[AccountDetails]] = {
+    http.get(s"$adminUrl/users") map { resp =>
+      resp.status match {
+        case OK         => resp.toDataType[List[AccountDetails]](needsDecrypt = true)
+        case NO_CONTENT => List.empty[AccountDetails]
+      }
+    }
+  }
+
+  def deleteManagementUser(managementId: String)(implicit request: Request[_]): Future[Boolean] = {
+    http.delete(s"$adminUrl/user/$managementId") map {
+      _ => true
+    } recover {
+      case _ => false
     }
   }
 }

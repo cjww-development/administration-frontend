@@ -50,8 +50,18 @@ trait MockAdminConnector extends BeforeAndAfterEach with MockitoSugar with Fixtu
       .thenReturn(Future(if(authenticated) Some(generateTestSystemId(MANAGEMENT)) else None))
   }
 
-  def mockGetManagementUser(found: Boolean): OngoingStubbing[Future[AccountDetails]] = {
+  def mockGetManagementUser(found: Boolean, permissions: List[String] = List.empty[String]): OngoingStubbing[Future[AccountDetails]] = {
     when(mockAdminConnector.getManagementUser(ArgumentMatchers.any())(ArgumentMatchers.any()))
-      .thenReturn(if(found) Future(testAccountDetails) else Future.failed(new NotFoundException("")))
+      .thenReturn(if(found) Future(if(permissions.isEmpty) testAccountDetails else testAccountDetails.copy(permissions = permissions)) else Future.failed(new NotFoundException("")))
+  }
+
+  def mockGetAllManagementUsers(populated: Boolean): OngoingStubbing[Future[List[AccountDetails]]] = {
+    when(mockAdminConnector.getAllManagementUsers(ArgumentMatchers.any()))
+      .thenReturn(Future(if(populated) List(testAccountDetails) else List.empty[AccountDetails]))
+  }
+
+  def mockDeleteManagementUser(deleted: Boolean): OngoingStubbing[Future[Boolean]] = {
+    when(mockAdminConnector.deleteManagementUser(ArgumentMatchers.any())(ArgumentMatchers.any()))
+      .thenReturn(Future(deleted))
   }
 }

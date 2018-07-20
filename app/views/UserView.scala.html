@@ -1,0 +1,60 @@
+@import com.cjwwdev.frontendUI.builders.NavBarLinkBuilder
+@import com.cjwwdev.views.html.templates.AdminMainTemplate
+@import views.html.components.QuickLinks
+
+@(fetchedUser: AccountDetails)(implicit request: Request[_], user: AccountDetails, messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
+
+@colourSwitcher(random : Int) = {
+    @random match {
+        case 0 => {
+            #0A5A95
+        }
+        case 1 => {
+            #F08B16
+        }
+        case 2 => {
+            #9A090C
+        }
+        case 3 => {
+            #57920B
+        }
+        case _ => {
+            #0A5A95
+        }
+    }
+}
+
+@AdminMainTemplate(title = messages("pages.view-users.title", fetchedUser.username), links, navBarRoutes){
+    <div class="top-block-single">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="page-header">
+                        <h2 id="quick-links" class="pageTitle">@messages("pages.dashboard.quick-links.heading")</h2>
+                    </div>
+
+                    @QuickLinks()
+                </div>
+
+                <div class="col-md-9">
+                    <div class="page-header">
+                        <h2 id="main-heading" class="pageTitle">@messages("pages.view-users.heading", fetchedUser.username)</h2>
+                    </div>
+
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>@messages("pages.view-users.management-id")</strong> @fetchedUser.managementId</li>
+                        <li class="list-group-item"><strong>@messages("pages.view-users.username")</strong> @fetchedUser.username</li>
+                        <li class="list-group-item"><strong>@messages("pages.view-users.email")</strong> @fetchedUser.email</li>
+                        <li class="list-group-item"><strong>@messages("pages.view-users.permissions")</strong> @fetchedUser.permissions.mkString(" | ")</li>
+                    </ul>
+
+                    @if(fetchedUser.managementId == user.managementId) {
+                        <p>@messages("pages.view-users.cannot-delete")</p>
+                    } else {
+                        <a class="btn btn-lg btn-danger" href="@routes.DashboardController.deleteUser(fetchedUser.managementId)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> @messages("pages.view-users.delete")</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
