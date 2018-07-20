@@ -15,15 +15,24 @@
  */
 package helpers.other
 
-import models.{Account, AccountDetails, Credentials}
+import models.{Account, AccountDetails, Credentials, Registration}
 import play.api.mvc.Session
 
 trait Fixtures extends TestDataGenerator {
 
   val testAccount = Account(
-    username = "testUserName",
-    email    = "testEmail",
-    password = "testPassword"
+    username    = "testUserName",
+    email       = "testEmail",
+    password    = "testPassword",
+    permissions = List("all")
+  )
+
+  val testRegistration = Registration(
+    username        = "testUserName",
+    email           = "testEmail",
+    password        = "testPassword",
+    confirmPassword = "testPassword",
+    permissions     = "all"
   )
 
   val testCreds = Credentials(
@@ -34,7 +43,8 @@ trait Fixtures extends TestDataGenerator {
   val testAccountDetails = AccountDetails(
     managementId = generateTestSystemId(MANAGEMENT),
     username     = "testUserName",
-    email        = "test@email.com"
+    email        = "test@email.com",
+    permissions  = List("all")
   )
 
   val testSession = Session(data = Map(

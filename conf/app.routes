@@ -7,6 +7,13 @@ POST    /login                      controllers.LoginController.loginSubmit()
 
 GET     /dashboard                  controllers.DashboardController.dashboard()
 
+GET     /register-new-user          controllers.DashboardController.registerUser()
+POST    /register-new-user          controllers.DashboardController.registerUserSubmit()
+
+GET     /registered-users           controllers.DashboardController.usersOverview()
+GET     /edit-user                  controllers.DashboardController.viewUser(managementId ?= "")
+GET     /delete-user                controllers.DashboardController.deleteUser(managementId ?= "")
+
 GET     /sign-out                   controllers.LoginController.signOut()
 
 # Map static resources from the /public folder to the /assets URL path

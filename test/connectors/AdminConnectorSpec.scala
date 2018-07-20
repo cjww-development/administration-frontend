@@ -16,9 +16,11 @@
 
 package connectors
 
+import com.cjwwdev.http.exceptions.{ForbiddenException, ServerErrorException}
 import com.cjwwdev.implicits.ImplicitDataSecurity._
 import com.cjwwdev.http.verbs.Http
 import helpers.connectors.ConnectorSpec
+import models.AccountDetails
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -35,7 +37,7 @@ class AdminConnectorSpec extends ConnectorSpec {
       "the user has been registered" in {
         mockHttpPost(response = Future(fakeHttpResponse(statusCode = OK)))
 
-        awaitAndAssert(testConnector.registerNewUser(account = testAccount)) { registered =>
+        awaitAndAssert(testConnector.registerNewUser(registration = testRegistration)) { registered =>
           assert(registered)
         }
       }
@@ -43,10 +45,10 @@ class AdminConnectorSpec extends ConnectorSpec {
 
     "return false" when {
       "the user has not been registered" in {
-        mockHttpPost(response = Future(fakeHttpResponse(statusCode = INTERNAL_SERVER_ERROR)))
+        mockHttpPost(response = Future.failed(new ServerErrorException("", INTERNAL_SERVER_ERROR)))
 
-        awaitAndAssert(testConnector.registerNewUser(account = testAccount)) { registered =>
-          assert(registered)
+        awaitAndAssert(testConnector.registerNewUser(registration = testRegistration)) { registered =>
+          assert(!registered)
         }
       }
     }
@@ -71,6 +73,14 @@ class AdminConnectorSpec extends ConnectorSpec {
           _ mustBe None
         }
       }
+
+      "a Forbidden exception was thrown" in {
+        mockHttpPost(response = Future.failed(new ForbiddenException("")))
+
+        awaitAndAssert(testConnector.authenticateUser(credentials = testCreds)) {
+          _ mustBe None
+        }
+      }
     }
   }
 
@@ -80,6 +90,44 @@ class AdminConnectorSpec extends ConnectorSpec {
 
       awaitAndAssert(testConnector.getManagementUser(managementId = generateTestSystemId(MANAGEMENT))) {
         _ mustBe testAccountDetails
+      }
+    }
+  }
+
+  "getAllManagementUsers" should {
+    "a populated list" in {
+      mockHttpGet(response = Future(fakeHttpResponse(statusCode = OK, bodyContents = List(testAccountDetails).encryptType)))
+
+      awaitAndAssert(testConnector.getAllManagementUsers) { res =>
+        assert(res.nonEmpty)
+        res mustBe List(testAccountDetails)
+      }
+    }
+
+    "an empty list" in {
+      mockHttpGet(response = Future(fakeHttpResponse(statusCode = NO_CONTENT)))
+
+      awaitAndAssert(testConnector.getAllManagementUsers) { res =>
+        assert(res.isEmpty)
+        res mustBe List.empty[AccountDetails]
+      }
+    }
+  }
+
+  "deleteManagementUser" should {
+    "return true" in {
+      mockHttpDelete(response = Future(fakeHttpResponse(statusCode = NO_CONTENT)))
+
+      awaitAndAssert(testConnector.deleteManagementUser(generateTestSystemId(MANAGEMENT))) { bool =>
+        assert(bool)
+      }
+    }
+
+    "return false" in {
+      mockHttpDelete(response = Future.failed(new ServerErrorException("", INTERNAL_SERVER_ERROR)))
+
+      awaitAndAssert(testConnector.deleteManagementUser(generateTestSystemId(MANAGEMENT))) { bool =>
+        assert(!bool)
       }
     }
   }

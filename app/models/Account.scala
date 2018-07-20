@@ -20,7 +20,8 @@ import play.api.libs.json.{Json, OFormat}
 
 case class Account(username: String,
                    email: String,
-                   password: String)
+                   password: String,
+                   permissions: List[String])
 
 object Account {
   implicit val format: OFormat[Account] = Json.format[Account]

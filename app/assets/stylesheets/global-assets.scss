@@ -23,6 +23,10 @@ body {
   padding-top: 50px;
 }
 
+svg text{
+  font-family: 'Glyphicons Halflings';
+}
+
 .navbar-with-border {
   @extend .navbar;
   border-bottom: solid 5px #0A5A95;
@@ -117,7 +121,7 @@ body {
   }
 }
 
-.cjww-jumbo:nth-of-type(even) {
+.cjww-jumbo:nth-of-type(odd) {
   background-color: #FFFFFF;
   a {
     color: #000000;
@@ -152,7 +156,8 @@ body {
 
 .top-block {
   @extend .cjww-jumbo;
-  margin-top: 51px;
+  //margin-top: 51px;
+  padding-top: 100px;
 }
 
 .top-block-single {

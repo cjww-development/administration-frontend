@@ -2,20 +2,47 @@
 @import com.cjwwdev.views.html.templates.AdminMainTemplate
 @import com.cjwwdev.views.html.helpers.{errorPanel, textInput}
 @import helper._
+@import views.html.components.QuickLinks
 
-@()(implicit request: Request[_], messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
+@()(implicit request: Request[_], user: AccountDetails, messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
 
-@AdminMainTemplate(title = "", links, navBarRoutes){
+@colourSwitcher(random : Int) = {
+    @random match {
+        case 0 => {
+            #0A5A95
+        }
+        case 1 => {
+            #F08B16
+        }
+        case 2 => {
+            #9A090C
+        }
+        case 3 => {
+            #57920B
+        }
+        case _ => {
+            #0A5A95
+        }
+    }
+}
+
+@AdminMainTemplate(title = messages("pages.dashboard.quick-links.title"), links, navBarRoutes){
     <div class="top-block-single">
         <div class="container">
             <div class="row">
-                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <div class="page-header">
+                        <h2 id="quick-links" class="pageTitle">@messages("pages.dashboard.quick-links.heading")</h2>
+                    </div>
 
-                <div class="col-md-6">
-
+                    @QuickLinks()
                 </div>
 
-                <div class="col-md-3"></div>
+                <div class="col-md-9">
+                    <div class="page-header">
+                        <h2 id="main-heading" class="pageTitle">@messages("pages.dashboard.main-content.heading")</h2>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
