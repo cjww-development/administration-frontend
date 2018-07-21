@@ -1,12 +1,20 @@
 @()(implicit messages: MessagesApi, lang: Lang, user: AccountDetails)
 
 <div class="list-group">
+    <a id="registration-link" href="@routes.DashboardController.dashboard()" class="list-group-item">
+        <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> @messages("components.quick-links.dash")</h4>
+    </a>
     @if(user.permissions.contains("all")) {
     <a id="registration-link" href="@routes.DashboardController.registerUser()" class="list-group-item">
         <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> @messages("components.quick-links.register")</h4>
     </a>
     <a id="views-all-users-link" href="@routes.DashboardController.usersOverview()" class="list-group-item">
         <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> @messages("components.quick-links.view-users")</h4>
+    </a>
+    }
+    @if(user.permissions.contains("encdec") | user.permissions.contains("all")) {
+    <a id="enc-dec-link" href="@routes.EncDecController.showEncDecOptions()" class="list-group-item">
+        <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-barcode" aria-hidden="true"></span> @messages("components.quick-links.enc-dec")</h4>
     </a>
     }
 </div>

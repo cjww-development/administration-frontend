@@ -33,7 +33,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 trait MockAdminConnector extends BeforeAndAfterEach with MockitoSugar with Fixtures {
   self: PlaySpec =>
 
-  val mockAdminConnector = mock[AdminConnector]
+  val mockAdminConnector: AdminConnector = mock[AdminConnector]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
@@ -52,7 +52,15 @@ trait MockAdminConnector extends BeforeAndAfterEach with MockitoSugar with Fixtu
 
   def mockGetManagementUser(found: Boolean, permissions: List[String] = List.empty[String]): OngoingStubbing[Future[AccountDetails]] = {
     when(mockAdminConnector.getManagementUser(ArgumentMatchers.any())(ArgumentMatchers.any()))
-      .thenReturn(if(found) Future(if(permissions.isEmpty) testAccountDetails else testAccountDetails.copy(permissions = permissions)) else Future.failed(new NotFoundException("")))
+      .thenReturn(if(found) {
+        Future(if(permissions.isEmpty) {
+          testAccountDetails
+        } else {
+          testAccountDetails.copy(permissions = permissions)
+        })
+      } else {
+        Future.failed(new NotFoundException(""))
+      })
   }
 
   def mockGetAllManagementUsers(populated: Boolean): OngoingStubbing[Future[List[AccountDetails]]] = {

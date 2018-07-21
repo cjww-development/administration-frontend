@@ -26,7 +26,7 @@ val btVersion: String = Try(ConfigFactory.load.getString("version")) match {
 }
 
 lazy val scoverageSettings = Seq(
-  ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;models/.data/..*;config.*;models.*;utils.*;views.*;.*(AuthService|BuildInfo|Routes).*",
+  ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;models/.data/..*;config.*;models.*;common.*;utils.*;views.*;.*(AuthService|BuildInfo|Routes).*",
   ScoverageKeys.coverageMinimum          := 80,
   ScoverageKeys.coverageFailOnMinimum    := false,
   ScoverageKeys.coverageHighlighting     := true

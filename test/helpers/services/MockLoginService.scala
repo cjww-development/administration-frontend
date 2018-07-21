@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2018 CJWW Development
  *
