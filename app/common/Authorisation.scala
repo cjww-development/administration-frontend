@@ -20,12 +20,12 @@ import com.cjwwdev.frontendUI.builders.NavBarLinkBuilder
 import com.cjwwdev.logging.Logging
 import connectors.AdminConnector
 import models.AccountDetails
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.Lang
 import play.api.mvc._
 import views.html.IncorrectPermissionsView
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 trait Authorisation extends Logging {
   self: BaseController =>

@@ -16,9 +16,18 @@
 
 app.common.login                                    =Login
 app.common.register                                 =Register
+app.common.enc                                      =Encrypt
+app.common.dec                                      =Decrypt
+app.common.string                                   =String
+app.common.json                                     =Json
+app.common.enc-or-dec                               =Process
 
-components.quick-links.register                     =Register new user
-components.quick-links.view-users                   =Views all users
+components.quick-links.dash                         =Dashboard
+components.quick-links.register                     =Register user
+components.quick-links.view-users                   =Views users
+components.quick-links.enc-dec                      =Encrypt and decrypt
+components.quick-links.enc-dec.sha                  =SHA512
+components.quick-links.enc-dec.ds                   =Data security
 
 pages.incorrect-permissions.title                   =You are not allowed here
 pages.incorrect-permissions.heading                 =Woah
@@ -62,3 +71,14 @@ pages.view-users.email                              =Email:
 pages.view-users.permissions                        =Permissions:
 pages.view-users.delete                             =Delete user
 pages.view-users.cannot-delete                      =You can cannot delete your own account
+
+pages.enc-dec.title                                 =Encrypt and decrypt values
+pages.enc-dec.heading                               =Encrypt and decrypt values
+
+pages.sha.title                                     =Encrypt using SHA-512
+pages.sha.heading                                   =Encrypt using SHA-512
+
+pages.ds.title                                      =Encrypt or decrypt using data security
+pages.ds.heading                                    =Encrypt or decrypt using data security
+pages.ds.mode-select                                =Do you want encrypt or decrypt the data?
+pages.ds.data-type                                  =Are you processing a string or json?

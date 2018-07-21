@@ -2,19 +2,25 @@
 # This file defines all application app.routes (Higher priority app.routes first)
 # ~~~~
 
-GET     /login                      controllers.LoginController.login()
-POST    /login                      controllers.LoginController.loginSubmit()
+GET     /login                             controllers.LoginController.login()
+POST    /login                             controllers.LoginController.loginSubmit()
 
-GET     /dashboard                  controllers.DashboardController.dashboard()
+GET     /dashboard                         controllers.DashboardController.dashboard()
 
-GET     /register-new-user          controllers.DashboardController.registerUser()
-POST    /register-new-user          controllers.DashboardController.registerUserSubmit()
+GET     /register-new-user                 controllers.DashboardController.registerUser()
+POST    /register-new-user                 controllers.DashboardController.registerUserSubmit()
 
-GET     /registered-users           controllers.DashboardController.usersOverview()
-GET     /edit-user                  controllers.DashboardController.viewUser(managementId ?= "")
-GET     /delete-user                controllers.DashboardController.deleteUser(managementId ?= "")
+GET     /registered-users                  controllers.DashboardController.usersOverview()
+GET     /edit-user                         controllers.DashboardController.viewUser(managementId ?= "")
+GET     /delete-user                       controllers.DashboardController.deleteUser(managementId ?= "")
 
-GET     /sign-out                   controllers.LoginController.signOut()
+GET     /encrypt-and-decrypt               controllers.EncDecController.showEncDecOptions()
+GET     /encrypt-using-sha-512             controllers.EncDecController.showSHA512()
+POST    /encrypt-using-sha-512             controllers.EncDecController.submitSHA512()
+GET     /encrypt-decrypt-using-data-sec    controllers.EncDecController.showDataSecurity()
+POST    /encrypt-decrypt-using-data-sec    controllers.EncDecController.submitDataSecurity()
+
+GET     /sign-out                          controllers.LoginController.signOut()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                      controllers.Assets.versioned(path="/public", file: Asset)

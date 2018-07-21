@@ -1,0 +1,92 @@
+@import com.cjwwdev.frontendUI.builders.NavBarLinkBuilder
+@import com.cjwwdev.views.html.templates.AdminMainTemplate
+@import com.cjwwdev.views.html.helpers.{errorPanel, textInput}
+@import com.cjwwdev.views.html.helpers.radioButton
+@import helper._
+@import views.html.components.QuickLinks
+
+@(form: Form[(String, String, String)], finished: Boolean = false)(implicit request: Request[_], user: AccountDetails, messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
+
+@AdminMainTemplate(title = messages("pages.ds.title"), links, navBarRoutes){
+    <div class="top-block-single">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="page-header">
+                        <h2 id="quick-links" class="pageTitle">@messages("pages.dashboard.quick-links.heading")</h2>
+                    </div>
+
+                    @QuickLinks()
+                </div>
+
+                <div class="col-md-9">
+                    <div class="page-header">
+                        <h2 id="main-heading" class="pageTitle">@messages("pages.ds.heading")</h2>
+                    </div>
+
+                    @errorPanel(form)
+
+                    <form action="@routes.EncDecController.submitDataSecurity()" method="post">
+                        @CSRF.formField
+
+                        <p>@messages("pages.ds.mode-select")</p>
+                        <div class="form-group form-inline">
+                            @radioButton(
+                                form("mode"),
+                                "enc",
+                                '_name  -> "mode",
+                                '_id    -> "mode1",
+                                '_label -> messages("app.common.enc")
+                            )
+
+                            @radioButton(
+                                form("mode"),
+                                "dec",
+                                '_name  -> "mode",
+                                '_id    -> "mode2",
+                                '_label -> messages("app.common.dec")
+                            )
+                        </div>
+
+                        <p>@messages("pages.ds.data-type")</p>
+                        <div class="form-group form-inline">
+                            @radioButton(
+                                form("data-type"),
+                                "string",
+                                '_name  -> "data-type",
+                                '_id    -> "data-type1",
+                                '_label -> messages("app.common.string")
+                            )
+
+                            @radioButton(
+                                form("data-type"),
+                                "json",
+                                '_name  -> "data-type",
+                                '_id    -> "data-type2",
+                                '_label -> messages("app.common.json")
+                            )
+                        </div>
+
+                        <div class="form-group @if(finished) { has-success has-feedback } @if(form.hasErrors) { has-error }">
+                            <div class="input-group">
+                                <span class="input-group-addon">Data</span>
+                                <textarea class="form-control" id="data" name="data" rows="7" placeholder="Value to encrypt using SHA-512">@form.data.getOrElse("data", "")</textarea>
+                            </div>
+                            @if(finished) {
+                            <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+                            }
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <button id="register-submit" type="submit" class="btn btn-primary btn-lg">
+                                    <span class="glyphicon glyphicon-barcode" aria-hidden="true"></span> @messages("app.common.enc-or-dec")
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

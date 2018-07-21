@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package common
+package forms
 
-object Permissions {
-  val rootOnly = List("all")
+import forms.validation.CommonValidation
+import play.api.data.Form
+import play.api.data.Forms._
 
-  val encDec = rootOnly ++ List("encdec")
+object SHA512Form extends CommonValidation {
+  val form = Form(single("data" -> hasTextBeenEntered("data")))
 }
