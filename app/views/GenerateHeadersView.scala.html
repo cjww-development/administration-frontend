@@ -1,0 +1,69 @@
+@import com.cjwwdev.frontendUI.builders.NavBarLinkBuilder
+@import com.cjwwdev.views.html.templates.AdminMainTemplate
+@import com.cjwwdev.views.html.helpers.{errorPanel, textInput}
+@import helper._
+@import views.html.components.QuickLinks
+
+@(form: Form[(String, Option[String])], header: Option[String] = None)(implicit request: Request[_], user: AccountDetails, messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
+
+@AdminMainTemplate(title = messages("pages.headers.title"), links, navBarRoutes){
+    <div class="top-block-single">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="page-header">
+                        <h2 id="quick-links" class="pageTitle">@messages("pages.dashboard.quick-links.heading")</h2>
+                    </div>
+
+                    @QuickLinks()
+                </div>
+
+                <div class="col-md-9">
+                    <div class="page-header">
+                        <h2 id="main-heading" class="pageTitle">@messages("pages.headers.heading")</h2>
+                    </div>
+
+                    @errorPanel(form)
+
+                    <form action="@routes.HeadersController.headersSubmit()" method="post">
+                        @CSRF.formField
+
+                        @textInput(
+                            form("appId"),
+                            false,
+                            '_sassClass   -> "cjww-input-group-addon",
+                            '_label       -> Html(messages("pages.headers.form.appId.label")),
+                            '_inputType   -> "text",
+                            '_placeholder -> messages("pages.headers.form.appId.placeholder"),
+                            '_fieldName   -> "appId",
+                            '_spanId      -> "appId-span"
+                        )
+
+                        @textInput(
+                            form("cookieId"),
+                            false,
+                            '_sassClass   -> "cjww-input-group-addon",
+                            '_label       -> Html(messages("pages.headers.form.cookieId.label")),
+                            '_inputType   -> "text",
+                            '_placeholder -> messages("pages.headers.form.cookieId.placeholder"),
+                            '_fieldName   -> "cookieId",
+                            '_spanId      -> "cookieId-span"
+                        )
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <button id="generate-headers-submit" type="submit" class="btn btn-primary btn-lg">
+                                    <span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span> @messages("app.common.generate")
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    @if(header.isDefined) {
+                    <div id="generated-header-well" class="generated-registration-code-well">@header.get</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

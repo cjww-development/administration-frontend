@@ -20,6 +20,9 @@ POST    /encrypt-using-sha-512             controllers.EncDecController.submitSH
 GET     /encrypt-decrypt-using-data-sec    controllers.EncDecController.showDataSecurity()
 POST    /encrypt-decrypt-using-data-sec    controllers.EncDecController.submitDataSecurity()
 
+GET     /generate-headers                  controllers.HeadersController.headers()
+POST    /generate-headers                  controllers.HeadersController.headersSubmit()
+
 GET     /sign-out                          controllers.LoginController.signOut()
 
 # Map static resources from the /public folder to the /assets URL path

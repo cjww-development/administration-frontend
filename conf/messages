@@ -21,11 +21,13 @@ app.common.dec                                      =Decrypt
 app.common.string                                   =String
 app.common.json                                     =Json
 app.common.enc-or-dec                               =Process
+app.common.generate                                 =Generate
 
 components.quick-links.dash                         =Dashboard
 components.quick-links.register                     =Register user
 components.quick-links.view-users                   =View users
 components.quick-links.enc-dec                      =Encrypt and decrypt
+components.quick-links.headers                      =Generate headers
 components.quick-links.enc-dec.sha                  =SHA512
 components.quick-links.enc-dec.ds                   =Data security
 
@@ -82,3 +84,10 @@ pages.ds.title                                      =Encrypt or decrypt using da
 pages.ds.heading                                    =Encrypt or decrypt using data security
 pages.ds.mode-select                                =Do you want to encrypt or decrypt the data?
 pages.ds.data-type                                  =Are you processing a string or json?
+
+pages.headers.title                                 =Generate headers
+pages.headers.heading                               =Generate headers
+pages.headers.form.appId.label                      =Application Id
+pages.headers.form.appId.placeholder                =Enter the source application Id
+pages.headers.form.cookieId.label                   =Cookie Id
+pages.headers.form.cookieId.placeholder             =Enter the authorised users cookieId (optional)

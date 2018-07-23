@@ -16,7 +16,6 @@
 
 package controllers
 
-import com.cjwwdev.http.exceptions.ForbiddenException
 import javax.inject.Inject
 import common.{Authorisation, FrontendController, Permissions}
 import connectors.AdminConnector
@@ -38,13 +37,13 @@ trait DashboardController extends FrontendController with Authorisation {
   }
 
   def registerUser(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    permissionsGuard(user.permissions, Permissions.rootOnly) {
+    permissionsGuard(Permissions.rootOnly) {
       Future(Ok(RegisterNewUserView(RegistrationForm.form)))
     }
   }
 
   def registerUserSubmit(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    permissionsGuard(user.permissions, Permissions.rootOnly) {
+    permissionsGuard(Permissions.rootOnly) {
       RegistrationForm.form.bindFromRequest.fold(
         errors  => Future(BadRequest(RegisterNewUserView(errors))),
         newUser => adminConnector.registerNewUser(newUser) map {
@@ -59,7 +58,7 @@ trait DashboardController extends FrontendController with Authorisation {
   }
 
   def usersOverview(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    permissionsGuard(user.permissions, Permissions.rootOnly) {
+    permissionsGuard(Permissions.rootOnly) {
       adminConnector.getAllManagementUsers map {
         users => Ok(UsersOverviewView(users))
       }
@@ -67,7 +66,7 @@ trait DashboardController extends FrontendController with Authorisation {
   }
 
   def viewUser(managementId: String): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    permissionsGuard(user.permissions, Permissions.rootOnly) {
+    permissionsGuard(Permissions.rootOnly) {
       adminConnector.getManagementUser(managementId) map {
         acc => Ok(UserView(acc))
       }
@@ -75,7 +74,7 @@ trait DashboardController extends FrontendController with Authorisation {
   }
 
   def deleteUser(managementId: String): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    permissionsGuard(user.permissions, Permissions.rootOnly) {
+    permissionsGuard(Permissions.rootOnly) {
       adminConnector.deleteManagementUser(managementId) map {
         _ => Redirect(routes.DashboardController.usersOverview())
       }
