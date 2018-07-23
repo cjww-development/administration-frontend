@@ -19,4 +19,9 @@
         <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-barcode" aria-hidden="true"></span> @messages("components.quick-links.enc-dec")</h4>
     </a>
     }
+    @permissionViewGuard(headers) {
+    <a id="enc-dec-link" href="@routes.HeadersController.headers()" class="list-group-item">
+        <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-triangle-top" aria-hidden="true"></span> @messages("components.quick-links.headers")</h4>
+    </a>
+    }
 </div>

@@ -23,7 +23,6 @@ import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module}
 import services.{DefaultLoginService, LoginService}
 
-
 class ServiceBindings extends Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] =
     bindOther() ++ bindConnectors() ++ bindServices() ++ bindControllers()
@@ -43,6 +42,7 @@ class ServiceBindings extends Module {
   private def bindControllers(): Seq[Binding[_]] = Seq(
     bind(classOf[LoginController]).to(classOf[DefaultLoginController]).eagerly(),
     bind(classOf[DashboardController]).to(classOf[DefaultDashboardController]).eagerly(),
-    bind(classOf[EncDecController]).to(classOf[DefaultEncDecController]).eagerly()
+    bind(classOf[EncDecController]).to(classOf[DefaultEncDecController]).eagerly(),
+    bind(classOf[HeadersController]).to(classOf[DefaultHeadersController]).eagerly()
   )
 }

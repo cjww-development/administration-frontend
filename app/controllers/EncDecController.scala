@@ -34,19 +34,19 @@ class DefaultEncDecController @Inject()(val adminConnector: AdminConnector,
 trait EncDecController extends FrontendController with Authorisation {
 
   def showEncDecOptions(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    permissionsGuard(user.permissions, Permissions.encDec) {
+    permissionsGuard(Permissions.encDec) {
       Future(Ok(EncDecOptionsView()))
     }
   }
 
   def showSHA512(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    permissionsGuard(user.permissions, Permissions.encDec) {
+    permissionsGuard(Permissions.encDec) {
       Future(Ok(SHA512View(SHA512Form.form)))
     }
   }
 
   def submitSHA512(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    permissionsGuard(user.permissions, Permissions.encDec) {
+    permissionsGuard(Permissions.encDec) {
       SHA512Form.form.bindFromRequest.fold(
         errors => Future(BadRequest(SHA512View(errors))),
         string => Future(Ok(SHA512View(SHA512Form.form.fill(SHA512.encrypt(string)), finished = true)))
@@ -55,13 +55,13 @@ trait EncDecController extends FrontendController with Authorisation {
   }
 
   def showDataSecurity(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    permissionsGuard(user.permissions, Permissions.encDec) {
+    permissionsGuard(Permissions.encDec) {
       Future(Ok(DataSecurityView(DataSecurityForm.form)))
     }
   }
 
   def submitDataSecurity(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    permissionsGuard(user.permissions, Permissions.encDec) {
+    permissionsGuard(Permissions.encDec) {
       DataSecurityForm.form.bindFromRequest.fold(
         errors => Future(BadRequest(DataSecurityView(errors))),
         form   => {

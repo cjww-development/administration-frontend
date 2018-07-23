@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package common
+package forms
 
-import models.AccountDetails
-import play.twirl.api.Html
+import forms.DataSecurityForm.hasTextBeenEntered
+import play.api.data.Form
+import play.api.data.Forms._
 
-object Permissions {
-  val rootOnly = List("all")
-  val encDec   = rootOnly ++ List("encdec")
-  val headers  = rootOnly ++ List("headers")
-
-  def permissionGranted(pagePermissions: List[String])(implicit user: AccountDetails): Boolean = {
-    (pagePermissions intersect user.permissions).nonEmpty
-  }
-
-  def permissionViewGuard(pagePermissions: List[String])(html: => Html)(implicit user: AccountDetails): Html = {
-    if((pagePermissions intersect user.permissions).nonEmpty) {
-      html
-    } else {
-      Html("")
-    }
-  }
+object HeadersForm {
+  val form = Form(
+    tuple(
+      "appId"     -> hasTextBeenEntered("Application Id"),
+      "cookieId"  -> optional(text)
+    )
+  )
 }
