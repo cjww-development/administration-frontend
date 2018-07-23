@@ -24,7 +24,7 @@ app.common.enc-or-dec                               =Process
 
 components.quick-links.dash                         =Dashboard
 components.quick-links.register                     =Register user
-components.quick-links.view-users                   =Views users
+components.quick-links.view-users                   =View users
 components.quick-links.enc-dec                      =Encrypt and decrypt
 components.quick-links.enc-dec.sha                  =SHA512
 components.quick-links.enc-dec.ds                   =Data security
@@ -39,7 +39,7 @@ pages.user-login.text-entry.username.label          =Username
 pages.user-login.text-entry.password.label          =Password
 pages.user-login.text-entry.username.placeholder    =Your username
 pages.user-login.text-entry.password.placeholder    =Your password
-pages.user-login.text-entry.login-error             =Either your user name or password wasn't correct
+pages.user-login.text-entry.login-error             =Either your user name or password wasn''t correct
 
 pages.dashboard.quick-links.title                   =Dashboard
 pages.dashboard.quick-links.heading                 =Quick links
@@ -80,5 +80,5 @@ pages.sha.heading                                   =Encrypt using SHA-512
 
 pages.ds.title                                      =Encrypt or decrypt using data security
 pages.ds.heading                                    =Encrypt or decrypt using data security
-pages.ds.mode-select                                =Do you want encrypt or decrypt the data?
+pages.ds.mode-select                                =Do you want to encrypt or decrypt the data?
 pages.ds.data-type                                  =Are you processing a string or json?

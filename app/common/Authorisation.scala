@@ -49,11 +49,7 @@ trait Authorisation extends Logging {
   protected def permissionsGuard(usersPermissions: List[String], routePermissions: List[String])
                       (f: => Future[Result])
                       (implicit request: Request[_], lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call]): Future[Result] = {
-    val allowances = usersPermissions.map(permission => routePermissions.contains(permission))
-    if(allowances.contains(true)) {
-      f
-    } else {
-      Future(Forbidden(IncorrectPermissionsView()))
-    }
+    val permissionGranted = (usersPermissions intersect routePermissions).nonEmpty
+    if(permissionGranted) f else Future(Forbidden(IncorrectPermissionsView()))
   }
 }
