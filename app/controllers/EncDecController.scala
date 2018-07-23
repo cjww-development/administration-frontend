@@ -78,7 +78,7 @@ trait EncDecController extends FrontendController with Authorisation {
               Json.prettyPrint(DataSecurity.decryptIntoType[JsValue](data).get)
             }
           }
-          Future(Ok(DataSecurityView(DataSecurityForm.form.fill(processedData, dataType, mode))))
+          Future(Ok(DataSecurityView(DataSecurityForm.form.fill(processedData, dataType, mode), finished = true)))
         }
       )
     }

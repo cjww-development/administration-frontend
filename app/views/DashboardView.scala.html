@@ -3,6 +3,7 @@
 @import com.cjwwdev.views.html.helpers.{errorPanel, textInput}
 @import helper._
 @import views.html.components.QuickLinks
+@import common.Permissions._
 
 @()(implicit request: Request[_], user: AccountDetails, messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
 
@@ -44,8 +45,9 @@
                     </div>
 
                     <div class="row">
+                        @permissionViewGuard(rootOnly) {
                         <div class="col-sm-6 col-md-3">
-                            <a href="@routes.DashboardController.registerUser()">
+                            <a id="register-user-dash-link" href="@routes.DashboardController.registerUser()">
                                 <div class="thumbnail">
                                     <object>
                                         <svg viewBox="0 0 140 140" preserveAspectRatio="xMinYMin meet">
@@ -58,14 +60,14 @@
                                         </svg>
                                     </object>
                                     <div class="caption text-center">
-                                        <h3>@messages("components.quick-links.register")</h3>
+                                        <h3 id="register-user-dash-link-caption">@messages("components.quick-links.register")</h3>
                                     </div>
                                 </div>
                             </a>
                         </div>
 
                         <div class="col-sm-6 col-md-3">
-                            <a href="@routes.DashboardController.usersOverview()">
+                            <a id="view-users-dash-link" href="@routes.DashboardController.usersOverview()">
                                 <div class="thumbnail">
                                     <object>
                                         <svg viewBox="0 0 140 140" preserveAspectRatio="xMinYMin meet">
@@ -78,14 +80,16 @@
                                         </svg>
                                     </object>
                                     <div class="caption text-center">
-                                        <h3>@messages("components.quick-links.view-users")</h3>
+                                        <h3 id="view-users-dash-link-caption">@messages("components.quick-links.view-users")</h3>
                                     </div>
                                 </div>
                             </a>
                         </div>
+                        }
 
+                        @permissionViewGuard(encDec) {
                         <div class="col-sm-6 col-md-3">
-                            <a href="@routes.EncDecController.showDataSecurity()">
+                            <a id="data-sec-dash-link" href="@routes.EncDecController.showDataSecurity()">
                                 <div class="thumbnail">
                                     <object>
                                         <svg viewBox="0 0 140 140" preserveAspectRatio="xMinYMin meet">
@@ -98,14 +102,14 @@
                                         </svg>
                                     </object>
                                     <div class="caption text-center">
-                                        <h3>@messages("components.quick-links.enc-dec.ds")</h3>
+                                        <h3 id="data-sec-dash-link-caption">@messages("components.quick-links.enc-dec.ds")</h3>
                                     </div>
                                 </div>
                             </a>
                         </div>
 
                         <div class="col-sm-6 col-md-3">
-                            <a href="@routes.EncDecController.showSHA512()">
+                            <a id="sha-dash-link" href="@routes.EncDecController.showSHA512()">
                                 <div class="thumbnail">
                                     <object>
                                         <svg viewBox="0 0 140 140" preserveAspectRatio="xMinYMin meet">
@@ -118,11 +122,12 @@
                                         </svg>
                                     </object>
                                     <div class="caption text-center">
-                                        <h3>@messages("components.quick-links.enc-dec.sha")</h3>
+                                        <h3 id="sha-dash-link-caption">@messages("components.quick-links.enc-dec.sha")</h3>
                                     </div>
                                 </div>
                             </a>
                         </div>
+                        }
                     </div>
                 </div>
             </div>

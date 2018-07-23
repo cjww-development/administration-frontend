@@ -42,16 +42,16 @@
                     </div>
 
                     <ul class="list-group">
-                        <li class="list-group-item"><strong>@messages("pages.view-users.management-id")</strong> @fetchedUser.managementId</li>
-                        <li class="list-group-item"><strong>@messages("pages.view-users.username")</strong> @fetchedUser.username</li>
-                        <li class="list-group-item"><strong>@messages("pages.view-users.email")</strong> @fetchedUser.email</li>
-                        <li class="list-group-item"><strong>@messages("pages.view-users.permissions")</strong> @fetchedUser.permissions.mkString(" | ")</li>
+                        <li class="list-group-item" id="managementId"><strong>@messages("pages.view-users.management-id")</strong> @fetchedUser.managementId</li>
+                        <li class="list-group-item" id="username"><strong>@messages("pages.view-users.username")</strong> @fetchedUser.username</li>
+                        <li class="list-group-item" id="email"><strong>@messages("pages.view-users.email")</strong> @fetchedUser.email</li>
+                        <li class="list-group-item" id="permissions"><strong>@messages("pages.view-users.permissions")</strong> @fetchedUser.permissions.mkString(" | ")</li>
                     </ul>
 
                     @if(fetchedUser.managementId == user.managementId) {
                         <p>@messages("pages.view-users.cannot-delete")</p>
                     } else {
-                        <a class="btn btn-lg btn-danger" href="@routes.DashboardController.deleteUser(fetchedUser.managementId)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> @messages("pages.view-users.delete")</a>
+                        <a class="btn btn-lg btn-danger" id="delete-user" href="@routes.DashboardController.deleteUser(fetchedUser.managementId)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> @messages("pages.view-users.delete")</a>
                     }
                 </div>
             </div>
