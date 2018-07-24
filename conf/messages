@@ -30,6 +30,7 @@ components.quick-links.enc-dec                      =Encrypt and decrypt
 components.quick-links.headers                      =Generate headers
 components.quick-links.enc-dec.sha                  =SHA512
 components.quick-links.enc-dec.ds                   =Data security
+components.quick-links.uuid                         =Generate UUID
 
 pages.incorrect-permissions.title                   =You are not allowed here
 pages.incorrect-permissions.heading                 =Woah
@@ -91,3 +92,8 @@ pages.headers.form.appId.label                      =Application Id
 pages.headers.form.appId.placeholder                =Enter the source application Id
 pages.headers.form.cookieId.label                   =Cookie Id
 pages.headers.form.cookieId.placeholder             =Enter the authorised users cookieId (optional)
+
+pages.uuid.title                                    =Generate a UUID
+pages.uuid.heading                                  =Generate a UUID
+pages.uuid.help                                     =This utility generates a UUID for use in API testing or for generating new applications Ids. Refresh the page or click generate to get a new UUID.
+

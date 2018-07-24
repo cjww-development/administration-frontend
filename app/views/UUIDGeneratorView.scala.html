@@ -1,0 +1,37 @@
+@import com.cjwwdev.frontendUI.builders.NavBarLinkBuilder
+@import com.cjwwdev.views.html.templates.AdminMainTemplate
+@import views.html.components.QuickLinks
+
+@(uuid: String)(implicit request: Request[_], user: AccountDetails, messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
+
+@AdminMainTemplate(title = messages("pages.uuid.title"), links, navBarRoutes){
+    <div class="top-block-single">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="page-header">
+                        <h2 id="quick-links" class="pageTitle">@messages("pages.dashboard.quick-links.heading")</h2>
+                    </div>
+
+                    @QuickLinks()
+                </div>
+
+                <div class="col-md-9">
+                    <div class="page-header">
+                        <h2 id="main-heading" class="pageTitle">@messages("pages.uuid.heading")</h2>
+                    </div>
+
+                    <div id="generated-uuid" class="generated-registration-code-well">
+                        <div class="h2 text-center">@uuid</div>
+                    </div>
+
+                    <p>@messages("pages.uuid.help")</p>
+
+                    <a class="btn btn-lg btn-primary" id="generate-uuid" href="@routes.AppIdController.showUUIDGenerator()">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> @messages("app.common.generate")
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

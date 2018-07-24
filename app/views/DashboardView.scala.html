@@ -4,6 +4,7 @@
 @import helper._
 @import views.html.components.QuickLinks
 @import common.Permissions._
+@import common.ThumbNails
 
 @()(implicit request: Request[_], user: AccountDetails, messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
 
@@ -44,91 +45,13 @@
                         <h2 id="main-heading" class="pageTitle">@messages("pages.dashboard.main-content.heading")</h2>
                     </div>
 
-                    <div class="row">
-                        @permissionViewGuard(rootOnly) {
-                        <div class="col-sm-6 col-md-3">
-                            <a id="register-user-dash-link" href="@routes.DashboardController.registerUser()">
-                                <div class="thumbnail">
-                                    <object>
-                                        <svg viewBox="0 0 140 140" preserveAspectRatio="xMinYMin meet">
-                                            <g>
-                                                <circle fill="@colourSwitcher(scala.util.Random.nextInt(4))" r="50%" cx="50%" cy="50%" class="circle-back" />
-                                                <text fill="#ffffff" font-size="45" font-family="Verdana" x="50%" y="60%">
-                                                    <tspan text-anchor="middle">R</tspan>
-                                                </text>
-                                            </g>
-                                        </svg>
-                                    </object>
-                                    <div class="caption text-center">
-                                        <h3 id="register-user-dash-link-caption">@messages("components.quick-links.register")</h3>
-                                    </div>
-                                </div>
-                            </a>
+                    @for(list <- ThumbNails.thumbnailList) {
+                        <div class="row">
+                            @for(html <- list) {
+                                @html
+                            }
                         </div>
-
-                        <div class="col-sm-6 col-md-3">
-                            <a id="view-users-dash-link" href="@routes.DashboardController.usersOverview()">
-                                <div class="thumbnail">
-                                    <object>
-                                        <svg viewBox="0 0 140 140" preserveAspectRatio="xMinYMin meet">
-                                            <g>
-                                                <circle fill="@colourSwitcher(scala.util.Random.nextInt(4))" r="50%" cx="50%" cy="50%" class="circle-back" />
-                                                <text fill="#ffffff" font-size="45" font-family="Verdana" x="50%" y="60%">
-                                                    <tspan text-anchor="middle">V</tspan>
-                                                </text>
-                                            </g>
-                                        </svg>
-                                    </object>
-                                    <div class="caption text-center">
-                                        <h3 id="view-users-dash-link-caption">@messages("components.quick-links.view-users")</h3>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        }
-
-                        @permissionViewGuard(encDec) {
-                        <div class="col-sm-6 col-md-3">
-                            <a id="data-sec-dash-link" href="@routes.EncDecController.showDataSecurity()">
-                                <div class="thumbnail">
-                                    <object>
-                                        <svg viewBox="0 0 140 140" preserveAspectRatio="xMinYMin meet">
-                                            <g>
-                                                <circle fill="@colourSwitcher(scala.util.Random.nextInt(4))" r="50%" cx="50%" cy="50%" class="circle-back" />
-                                                <text fill="#ffffff" font-size="45" font-family="Verdana" x="50%" y="60%">
-                                                    <tspan text-anchor="middle">DS</tspan>
-                                                </text>
-                                            </g>
-                                        </svg>
-                                    </object>
-                                    <div class="caption text-center">
-                                        <h3 id="data-sec-dash-link-caption">@messages("components.quick-links.enc-dec.ds")</h3>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-sm-6 col-md-3">
-                            <a id="sha-dash-link" href="@routes.EncDecController.showSHA512()">
-                                <div class="thumbnail">
-                                    <object>
-                                        <svg viewBox="0 0 140 140" preserveAspectRatio="xMinYMin meet">
-                                            <g>
-                                                <circle fill="@colourSwitcher(scala.util.Random.nextInt(4))" r="50%" cx="50%" cy="50%" class="circle-back" />
-                                                <text fill="#ffffff" font-size="45" font-family="Verdana" x="50%" y="60%">
-                                                    <tspan text-anchor="middle">SHA</tspan>
-                                                </text>
-                                            </g>
-                                        </svg>
-                                    </object>
-                                    <div class="caption text-center">
-                                        <h3 id="sha-dash-link-caption">@messages("components.quick-links.enc-dec.sha")</h3>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        }
-                    </div>
+                    }
                 </div>
             </div>
         </div>
