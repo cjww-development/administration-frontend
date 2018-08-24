@@ -23,6 +23,8 @@ POST    /encrypt-decrypt-using-data-sec    controllers.EncDecController.submitDa
 GET     /generate-headers                  controllers.HeadersController.headers()
 POST    /generate-headers                  controllers.HeadersController.headersSubmit()
 
+GET     /generate-uuid                     controllers.AppIdController.showUUIDGenerator()
+
 GET     /sign-out                          controllers.LoginController.signOut()
 
 # Map static resources from the /public folder to the /assets URL path

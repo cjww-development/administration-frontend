@@ -43,6 +43,7 @@ class ServiceBindings extends Module {
     bind(classOf[LoginController]).to(classOf[DefaultLoginController]).eagerly(),
     bind(classOf[DashboardController]).to(classOf[DefaultDashboardController]).eagerly(),
     bind(classOf[EncDecController]).to(classOf[DefaultEncDecController]).eagerly(),
-    bind(classOf[HeadersController]).to(classOf[DefaultHeadersController]).eagerly()
+    bind(classOf[HeadersController]).to(classOf[DefaultHeadersController]).eagerly(),
+    bind(classOf[AppIdController]).to(classOf[DefaultAppIdController]).eagerly()
   )
 }
