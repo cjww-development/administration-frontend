@@ -22,15 +22,20 @@ object AppDependencies {
 }
 
 private object CompileDependencies {
-  private val httpVerbsVersion     = "3.1.0"
+  private val httpVerbsVersion     = "3.2.0"
   private val authorisationVersion = "4.3.0"
-  private val appUtilsVersion      = "4.1.0"
-  private val frontendUIVersion    = "2.7.0"
+  private val appUtilsVersion      = "4.3.1"
+  private val frontendUIVersion    = "2.8.0"
   private val serviceHealthVersion = "0.2.0"
+  private val metricsVersion       = "2.6.6_0.6.2"
 
   private val playImports: Seq[ModuleID] = Seq(filters, guice)
 
-  private val compileDependencies: Seq[ModuleID] = Seq(
+  private val externalDependencies: Seq[ModuleID] = Seq(
+    "com.kenshoo" %% "metrics-play" % metricsVersion
+  )
+
+  private val cjwwDependencies: Seq[ModuleID] = Seq(
     "com.cjww-dev.libs" % "http-verbs_2.12"            % httpVerbsVersion,
     "com.cjww-dev.libs" % "authorisation_2.12"         % authorisationVersion,
     "com.cjww-dev.libs" % "application-utilities_2.12" % appUtilsVersion,
@@ -38,7 +43,7 @@ private object CompileDependencies {
     "com.cjww-dev.libs" % "service-health_2.12"        % serviceHealthVersion
   )
 
-  def apply(): Seq[ModuleID] = compileDependencies ++ playImports
+  def apply(): Seq[ModuleID] = cjwwDependencies ++ externalDependencies ++ playImports
 }
 
 private trait TestDependencies {

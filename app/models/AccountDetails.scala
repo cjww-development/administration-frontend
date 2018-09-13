@@ -16,6 +16,7 @@
 
 package models
 
+import com.cjwwdev.security.deobfuscation.{DeObfuscation, DeObfuscator, DecryptionError}
 import play.api.libs.json.{Json, OFormat}
 
 case class AccountDetails(managementId: String,
@@ -25,4 +26,14 @@ case class AccountDetails(managementId: String,
 
 object AccountDetails {
   implicit val format: OFormat[AccountDetails] = Json.format[AccountDetails]
+
+  implicit val deObfuscator: DeObfuscator[AccountDetails] = new DeObfuscator[AccountDetails] {
+    override def decrypt(value: String): Either[AccountDetails, DecryptionError] = DeObfuscation.deObfuscate(value)
+  }
+
+  implicit val listDeOfuscator: DeObfuscator[List[AccountDetails]] = new DeObfuscator[List[AccountDetails]] {
+    override def decrypt(value: String): Either[List[AccountDetails], DecryptionError] = {
+      DeObfuscation.deObfuscate[List[AccountDetails]](value)
+    }
+  }
 }

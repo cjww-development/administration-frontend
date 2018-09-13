@@ -21,18 +21,18 @@ import com.cjwwdev.http.exceptions.{ForbiddenException, ServerErrorException}
 import com.cjwwdev.http.responses.WsResponseHelpers
 import com.cjwwdev.http.verbs.Http
 import javax.inject.Inject
-
-import models.{Account, AccountDetails, Credentials, Registration}
+import models.{AccountDetails, Credentials, Registration}
+import models.Registration._
+import play.api.http.Status.{NO_CONTENT, OK}
 import play.api.libs.json.OFormat
-import play.api.http.Status.{OK, NO_CONTENT}
 import play.api.mvc.Request
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class DefaultAdminConnector @Inject()(val http: Http,
                                       val configLoader: ConfigurationLoader) extends AdminConnector {
-  override val adminUrl: String = configLoader.buildServiceUrl("administration")
+  override val adminUrl: String = configLoader.getServiceUrl("administration")
 }
 
 trait AdminConnector extends WsResponseHelpers {
