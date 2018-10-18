@@ -16,7 +16,8 @@
 
 package models
 
-import com.cjwwdev.security.encryption.SHA512
+import com.cjwwdev.implicits.ImplicitDataSecurity._
+import com.cjwwdev.security.obfuscation.{Obfuscation, Obfuscator}
 import play.api.libs.json._
 
 case class Registration(username: String,
@@ -30,11 +31,15 @@ object Registration {
     override def writes(reg: Registration): JsObject = Json.obj(
       "username"    -> reg.username,
       "email"       -> reg.email,
-      "password"    -> SHA512.encrypt(reg.password),
+      "password"    -> reg.password.sha512,
       "permissions" -> Json.toJson(reg.permissions.replace(" ", "").split(",").toList)
     )
 
     override def reads(json: JsValue): JsResult[Registration] = Json.fromJson(json)(Json.reads[Registration])
+  }
+
+  implicit val obfuscator: Obfuscator[Registration] = new Obfuscator[Registration] {
+    override def encrypt(value: Registration): String = Obfuscation.obfuscateJson(Json.toJson(value))
   }
 }
 

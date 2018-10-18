@@ -18,6 +18,7 @@ package common
 
 import com.cjwwdev.http.exceptions.ForbiddenException
 import com.cjwwdev.logging.Logging
+import com.cjwwdev.request.RequestBuilder
 import views.html.{NotFoundView, ServerErrorView, StandardErrorView}
 import controllers.routes
 import javax.inject.{Inject, Provider, Singleton}
@@ -36,12 +37,12 @@ class ErrorHandler @Inject()(env: Environment,
                              sm: OptionalSourceMapper,
                              router: Provider[Router],
                              langs: Langs,
-                             implicit val messages: MessagesApi) extends HttpErrorHandler with RequestBuilder with Logging with AppConfig {
+                             implicit val messages: MessagesApi) extends HttpErrorHandler with Logging with AppConfig {
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
     implicit val lang: Lang = langs.preferred(request.acceptLanguages)
     logger.error(s"[ErrorHandler] - [onClientError] - Url: ${request.uri}, status code: $statusCode")
-    implicit val req: Request[String] = buildNewRequest[String](request, "")
+    implicit val req: Request[String] = RequestBuilder.buildRequest[String](request, "")
     statusCode match {
       case NOT_FOUND                => Future.successful(NotFound(NotFoundView()))
       case FORBIDDEN | UNAUTHORIZED => Future.successful(Redirect(routes.LoginController.login().absoluteURL()).withNewSession)
@@ -53,7 +54,7 @@ class ErrorHandler @Inject()(env: Environment,
     implicit val lang: Lang = langs.preferred(request.acceptLanguages)
     logger.error(s"[ErrorHandler] - [onServerError] - exception : $exception")
     exception.printStackTrace()
-    implicit val req: Request[String] = buildNewRequest[String](request, "")
+    implicit val req: Request[String] = RequestBuilder.buildRequest[String](request, "")
     exception match {
       case _: ForbiddenException => Future.successful(Redirect(routes.LoginController.login().absoluteURL()).withNewSession)
       case _                     => Future.successful(InternalServerError(ServerErrorView()))

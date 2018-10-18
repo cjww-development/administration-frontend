@@ -17,6 +17,7 @@
 package connectors
 
 import com.cjwwdev.http.exceptions.{ForbiddenException, ServerErrorException}
+import com.cjwwdev.security.obfuscation.Obfuscation._
 import com.cjwwdev.implicits.ImplicitDataSecurity._
 import com.cjwwdev.http.verbs.Http
 import helpers.connectors.ConnectorSpec
@@ -86,7 +87,7 @@ class AdminConnectorSpec extends ConnectorSpec {
 
   "getManagementUser" should {
     "return an account details" in {
-      mockHttpGet(response = Future(fakeHttpResponse(statusCode = OK, bodyContents = testAccountDetails.encryptType)))
+      mockHttpGet(response = Future(fakeHttpResponse(statusCode = OK, bodyContents = testAccountDetails.encrypt)))
 
       awaitAndAssert(testConnector.getManagementUser(managementId = generateTestSystemId(MANAGEMENT))) {
         _ mustBe testAccountDetails
@@ -96,7 +97,7 @@ class AdminConnectorSpec extends ConnectorSpec {
 
   "getAllManagementUsers" should {
     "a populated list" in {
-      mockHttpGet(response = Future(fakeHttpResponse(statusCode = OK, bodyContents = List(testAccountDetails).encryptType)))
+      mockHttpGet(response = Future(fakeHttpResponse(statusCode = OK, bodyContents = List(testAccountDetails).encrypt)))
 
       awaitAndAssert(testConnector.getAllManagementUsers) { res =>
         assert(res.nonEmpty)

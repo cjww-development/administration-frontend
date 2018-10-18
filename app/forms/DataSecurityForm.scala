@@ -22,13 +22,10 @@ import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 
 object DataSecurityForm extends CommonValidation {
-  val form = Form(
-    tuple(
-      "data"      -> hasTextBeenEntered("data"),
-      "data-type" -> radioButtonValidation(validData = List("string", "json")),
-      "mode"      -> radioButtonValidation(validData = List("enc", "dec"))
-    )
-  )
+  val form = Form(tuple(
+    "data"      -> hasTextBeenEntered("data"),
+    "mode"      -> radioButtonValidation(validData = List("enc", "dec"))
+  ))
 
   private def radioButtonValidation(validData: List[String]): Mapping[String] = {
     val radioButtonConstraint: Constraint[String] = Constraint("constraint.displayName")({ displayName =>

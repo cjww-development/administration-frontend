@@ -22,7 +22,6 @@ import helpers.connectors.MockAdminConnector
 import helpers.other.{Fixtures, FutureAsserts}
 import helpers.services.MockLoginService
 import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 
@@ -33,7 +32,6 @@ trait ControllerSpec
     with MockLoginService
     with MockAdminConnector {
 
-  implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] =
-    FakeRequest()
-      .withHeaders("cjww-headers" -> HeaderPackage("testAppId", generateTestSystemId(MANAGEMENT)).encryptType)
+  implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+    .withHeaders("cjww-headers" -> HeaderPackage("testAppId", Some(generateTestSystemId(MANAGEMENT))).encrypt)
 }
