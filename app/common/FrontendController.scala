@@ -20,11 +20,6 @@ import com.cjwwdev.logging.Logging
 import play.api.i18n.Lang
 import play.api.mvc.{BaseController, ControllerHelpers, Request}
 
-trait FrontendController
-  extends BaseController
-    with ControllerHelpers
-    with AppConfig
-    with Logging {
-
+trait FrontendController extends BaseController with ControllerHelpers with AppConfig with Logging {
   implicit def getLang(implicit request: Request[_]): Lang = supportedLangs.preferred(request.acceptLanguages)
 }

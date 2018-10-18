@@ -20,15 +20,15 @@ import com.cjwwdev.http.exceptions.NotFoundException
 import connectors.AdminConnector
 import helpers.other.Fixtures
 import models.AccountDetails
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito.{reset, when}
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import org.mockito.Mockito.{reset, when}
-import org.mockito.ArgumentMatchers
-import org.mockito.stubbing.OngoingStubbing
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 trait MockAdminConnector extends BeforeAndAfterEach with MockitoSugar with Fixtures {
   self: PlaySpec =>

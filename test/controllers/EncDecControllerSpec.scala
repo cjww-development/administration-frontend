@@ -16,6 +16,7 @@
 
 package controllers
 
+import com.cjwwdev.security.obfuscation.Obfuscation._
 import com.cjwwdev.implicits.ImplicitDataSecurity._
 import connectors.AdminConnector
 import helpers.controllers.ControllerSpec

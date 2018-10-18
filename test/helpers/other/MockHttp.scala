@@ -48,7 +48,7 @@ trait MockHttp extends BeforeAndAfterEach with MockitoSugar with TestDataGenerat
   }
 
   def mockHttpPost(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.post(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockHttp.post(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(response)
   }
 
@@ -58,12 +58,12 @@ trait MockHttp extends BeforeAndAfterEach with MockitoSugar with TestDataGenerat
   }
 
   def mockHttpPut(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.put(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockHttp.put(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(response)
   }
 
   def mockHttpPatch(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.patch(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockHttp.patch(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(response)
   }
 

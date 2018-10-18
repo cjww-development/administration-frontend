@@ -16,7 +16,8 @@
 
 package models
 
-import com.cjwwdev.security.encryption.SHA512
+import com.cjwwdev.implicits.ImplicitDataSecurity._
+import com.cjwwdev.security.obfuscation.{Obfuscation, Obfuscator}
 import play.api.libs.json._
 
 case class Credentials(username: String, password: String)
@@ -25,7 +26,7 @@ object Credentials {
   implicit val format: OFormat[Credentials] = new OFormat[Credentials] {
     override def writes(creds: Credentials): JsObject = Json.obj(
       "username" -> creds.username,
-      "password" -> SHA512.encrypt(creds.password)
+      "password" -> creds.password.sha512
     )
 
     override def reads(json: JsValue): JsResult[Credentials] = Json.fromJson(json)(Json.reads[Credentials])
@@ -34,7 +35,11 @@ object Credentials {
   implicit val writes: OWrites[Credentials] = OWrites[Credentials] { creds =>
     Json.obj(
       "username" -> creds.username,
-      "password" -> SHA512.encrypt(creds.password)
+      "password" -> creds.password.sha512
     )
+  }
+
+  implicit val obfuscator: Obfuscator[Credentials] = new Obfuscator[Credentials] {
+    override def encrypt(value: Credentials): String = Obfuscation.obfuscateJson(Json.toJson(value))
   }
 }

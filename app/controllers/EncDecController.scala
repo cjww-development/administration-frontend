@@ -16,12 +16,13 @@
 
 package controllers
 
-import com.cjwwdev.security.encryption.{DataSecurity, SHA512}
+import com.cjwwdev.implicits.ImplicitDataSecurity._
+import com.cjwwdev.security.obfuscation.Obfuscation._
+import com.cjwwdev.security.deobfuscation.DeObfuscation._
 import common.{Authorisation, FrontendController, Permissions}
 import connectors.AdminConnector
 import forms.{DataSecurityForm, SHA512Form}
 import javax.inject.Inject
-import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import views.html.{DataSecurityView, EncDecOptionsView, SHA512View}
 
@@ -49,7 +50,7 @@ trait EncDecController extends FrontendController with Authorisation {
     permissionsGuard(Permissions.encDec) {
       SHA512Form.form.bindFromRequest.fold(
         errors => Future(BadRequest(SHA512View(errors))),
-        string => Future(Ok(SHA512View(SHA512Form.form.fill(SHA512.encrypt(string)), finished = true)))
+        string => Future(Ok(SHA512View(SHA512Form.form.fill(string.sha512), finished = true)))
       )
     }
   }
@@ -65,20 +66,12 @@ trait EncDecController extends FrontendController with Authorisation {
       DataSecurityForm.form.bindFromRequest.fold(
         errors => Future(BadRequest(DataSecurityView(errors))),
         form   => {
-          val (data, dataType, mode) = form
-          val processedData = dataType match {
-            case "string" => if(mode == "enc") {
-              DataSecurity.encryptString(data)
-            } else {
-              DataSecurity.decryptString(data)
-            }
-            case "json"   => if(mode == "enc") {
-              DataSecurity.encryptType[JsValue](Json.parse(data))
-            } else {
-              Json.prettyPrint(DataSecurity.decryptIntoType[JsValue](data).get)
-            }
+          val (data, mode) = form
+          val processedData = mode match {
+            case "enc" => data.encrypt
+            case "dec" => data.decrypt[String].fold(identity, _.message)
           }
-          Future(Ok(DataSecurityView(DataSecurityForm.form.fill(processedData, dataType, mode), finished = true)))
+          Future(Ok(DataSecurityView(DataSecurityForm.form.fill(processedData, mode), finished = true)))
         }
       )
     }

@@ -15,7 +15,9 @@
  */
 package helpers.other
 
+import com.cjwwdev.security.obfuscation.{Obfuscation, Obfuscator}
 import models.{Account, AccountDetails, Credentials, Registration}
+import play.api.libs.json.Json
 import play.api.mvc.Session
 
 trait Fixtures extends TestDataGenerator {
@@ -51,4 +53,12 @@ trait Fixtures extends TestDataGenerator {
     "cookieId" -> generateTestSystemId(MANAGEMENT),
     "username" -> testAccount.username
   ))
+
+  implicit val accDetailsObfuscator: Obfuscator[AccountDetails] = new Obfuscator[AccountDetails] {
+    override def encrypt(value: AccountDetails): String = Obfuscation.obfuscateJson(Json.toJson(value))
+  }
+
+  implicit val accDetailsListObfuscator: Obfuscator[List[AccountDetails]] = new Obfuscator[List[AccountDetails]] {
+    override def encrypt(value: List[AccountDetails]): String = Obfuscation.obfuscateJson(Json.toJson(value))
+  }
 }

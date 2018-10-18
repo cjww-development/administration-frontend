@@ -44,7 +44,7 @@ class LoginControllerSpec extends ControllerSpec {
     "redirect to login" when {
       "the user has successfully logged in" in {
         val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest()
-          .withHeaders("cjww-headers" -> HeaderPackage("testAppId", generateTestSystemId(MANAGEMENT)).encryptType)
+          .withHeaders("cjww-headers" -> HeaderPackage("testAppId", Some(generateTestSystemId(MANAGEMENT))).encrypt)
           .withFormUrlEncodedBody(
             "username" -> "invalid",
             "password" -> "invalid"
@@ -62,7 +62,7 @@ class LoginControllerSpec extends ControllerSpec {
     "return a Bad request" when {
       "the user provided no form values" in {
         val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest()
-          .withHeaders("cjww-headers" -> HeaderPackage("testAppId", generateTestSystemId(MANAGEMENT)).encryptType)
+          .withHeaders("cjww-headers" -> HeaderPackage("testAppId", Some(generateTestSystemId(MANAGEMENT))).encrypt)
           .withFormUrlEncodedBody(
             "username" -> "",
             "password" -> ""
@@ -75,7 +75,7 @@ class LoginControllerSpec extends ControllerSpec {
 
       "the user was not successfully logged" in {
         val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest()
-          .withHeaders("cjww-headers" -> HeaderPackage("testAppId", generateTestSystemId(MANAGEMENT)).encryptType)
+          .withHeaders("cjww-headers" -> HeaderPackage("testAppId", Some(generateTestSystemId(MANAGEMENT))).encrypt)
           .withFormUrlEncodedBody(
             "username" -> "invalid",
             "password" -> "invalid"

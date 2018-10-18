@@ -34,5 +34,4 @@ trait ConnectorSpec
 
   implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest().withSession("cookieId" -> generateTestSystemId(MANAGEMENT))
-
 }

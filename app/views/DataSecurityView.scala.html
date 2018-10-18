@@ -5,7 +5,7 @@
 @import helper._
 @import views.html.components.QuickLinks
 
-@(form: Form[(String, String, String)], finished: Boolean = false)(implicit request: Request[_], user: AccountDetails, messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
+@(form: Form[(String, String)], finished: Boolean = false)(implicit request: Request[_], user: AccountDetails, messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
 
 @AdminMainTemplate(title = messages("pages.ds.title"), links, navBarRoutes){
     <div class="top-block-single">
@@ -45,25 +45,6 @@
                                 '_name  -> "mode",
                                 '_id    -> "mode2",
                                 '_label -> messages("app.common.dec")
-                            )
-                        </div>
-
-                        <p>@messages("pages.ds.data-type")</p>
-                        <div class="form-group form-inline">
-                            @radioButton(
-                                form("data-type"),
-                                "string",
-                                '_name  -> "data-type",
-                                '_id    -> "data-type1",
-                                '_label -> messages("app.common.string")
-                            )
-
-                            @radioButton(
-                                form("data-type"),
-                                "json",
-                                '_name  -> "data-type",
-                                '_id    -> "data-type2",
-                                '_label -> messages("app.common.json")
                             )
                         </div>
 

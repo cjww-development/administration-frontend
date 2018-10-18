@@ -45,7 +45,7 @@ trait HeadersController extends FrontendController with Authorisation {
         errors => Future(BadRequest(GenerateHeadersView(errors))),
         tuple  => {
           val (appId, cookieId) = tuple
-          val headerPackage: Option[String] = Some(HeaderPackage(appId, cookieId.getOrElse("")).encryptType)
+          val headerPackage: Option[String] = Some(HeaderPackage(appId, cookieId).encrypt)
           Future(Ok(GenerateHeadersView(HeadersForm.form.fill(tuple), header = headerPackage)))
         }
       )
