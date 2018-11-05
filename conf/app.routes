@@ -25,6 +25,9 @@ POST    /generate-headers                  controllers.HeadersController.headers
 
 GET     /generate-uuid                     controllers.AppIdController.showUUIDGenerator()
 
+GET     /service-shuttering                controllers.ShutteringController.show()
+POST    /service-shuttering                controllers.ShutteringController.submit()
+
 GET     /sign-out                          controllers.LoginController.signOut()
 
 # Map static resources from the /public folder to the /assets URL path

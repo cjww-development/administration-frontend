@@ -22,11 +22,11 @@ object AppDependencies {
 }
 
 private object CompileDependencies {
-  private val appUtilsVersion      = "4.3.2"
-  private val authorisationVersion = "4.5.0"
-  private val frontendUIVersion    = "2.8.1"
-  private val httpVerbsVersion     = "3.3.0"
-  private val serviceHealthVersion = "0.3.0"
+  private val appUtilsVersion      = "4.5.2"
+  private val authorisationVersion = "4.6.0"
+  private val frontendUIVersion    = "2.8.2"
+  private val httpVerbsVersion     = "3.4.0"
+  private val serviceHealthVersion = "0.3.1"
 
   private val playImports: Seq[ModuleID] = Seq(filters, guice)
 

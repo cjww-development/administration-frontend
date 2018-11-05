@@ -20,7 +20,7 @@ import com.cjwwdev.http.headers.HeaderPackage
 import com.cjwwdev.implicits.ImplicitDataSecurity._
 import helpers.connectors.MockAdminConnector
 import helpers.other.{Fixtures, FutureAsserts}
-import helpers.services.MockLoginService
+import helpers.services.{MockLoginService, MockShutteringService}
 import org.scalatestplus.play.PlaySpec
 import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
@@ -30,6 +30,7 @@ trait ControllerSpec
     with FutureAsserts
     with Fixtures
     with MockLoginService
+    with MockShutteringService
     with MockAdminConnector {
 
   implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()

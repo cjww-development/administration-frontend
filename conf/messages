@@ -22,6 +22,7 @@ app.common.string                                   =String
 app.common.json                                     =Json
 app.common.enc-or-dec                               =Process
 app.common.generate                                 =Generate
+app.common.shutter                                  =Shutter
 
 components.quick-links.dash                         =Dashboard
 components.quick-links.register                     =Register user
@@ -31,6 +32,7 @@ components.quick-links.headers                      =Generate headers
 components.quick-links.enc-dec.sha                  =SHA512
 components.quick-links.enc-dec.ds                   =Data security
 components.quick-links.uuid                         =Generate UUID
+components.quick-links.shuttering                   =Service Shuttering
 
 pages.incorrect-permissions.title                   =You are not allowed here
 pages.incorrect-permissions.heading                 =Woah
@@ -96,4 +98,7 @@ pages.headers.form.cookieId.placeholder             =Enter the authorised users 
 pages.uuid.title                                    =Generate a UUID
 pages.uuid.heading                                  =Generate a UUID
 pages.uuid.help                                     =This utility generates a UUID for use in API testing or for generating new applications Ids. Refresh the page or click generate to get a new UUID.
+
+pages.shuttering.title                              =Service shuttering
+pages.shuttering.heading                            =Service shuttering
 

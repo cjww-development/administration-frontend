@@ -20,19 +20,17 @@ import models.AccountDetails
 import play.twirl.api.Html
 
 object Permissions {
-  val rootOnly = List("all")
-  val encDec   = rootOnly ++ List("encdec")
-  val headers  = rootOnly ++ List("headers")
+  val rootOnly   = List("all")
+  val encDec     = rootOnly ++ List("encdec")
+  val headers    = rootOnly ++ List("headers")
+  val shuttering = rootOnly ++ List("shuttering")
+
 
   def permissionGranted(pagePermissions: List[String])(implicit user: AccountDetails): Boolean = {
     (pagePermissions intersect user.permissions).nonEmpty
   }
 
   def permissionViewGuard(pagePermissions: List[String])(html: => Html)(implicit user: AccountDetails): Html = {
-    if((pagePermissions intersect user.permissions).nonEmpty) {
-      html
-    } else {
-      Html("")
-    }
+    if((pagePermissions intersect user.permissions).nonEmpty) html else Html("")
   }
 }

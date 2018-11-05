@@ -14,14 +14,6 @@
  * limitations under the License.
  */
 
-package helpers.services
+package models
 
-import helpers.connectors.MockAdminConnector
-import helpers.other.{FutureAsserts, MockRequest}
-import org.scalatestplus.play.PlaySpec
-
-trait ServiceSpec
-  extends PlaySpec
-    with FutureAsserts
-    with MockAdminConnector
-    with MockRequest
+case class ServiceShutter(service: String, value: Boolean)

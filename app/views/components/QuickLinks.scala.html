@@ -27,4 +27,9 @@
     <a id="uuid-link" href="@routes.AppIdController.showUUIDGenerator()" class="list-group-item">
         <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> @messages("components.quick-links.uuid")</h4>
     </a>
+    @permissionViewGuard(shuttering) {
+    <a id="shuttering-link" href="@routes.ShutteringController.show()" class="list-group-item">
+        <h4 class="list-group-item-heading"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> @messages("components.quick-links.shuttering")</h4>
+    </a>
+    }
 </div>
