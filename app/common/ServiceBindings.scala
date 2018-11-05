@@ -17,11 +17,11 @@
 package common
 
 import com.cjwwdev.config.{ConfigurationLoader, DefaultConfigurationLoader}
-import connectors.{AdminConnector, DefaultAdminConnector}
+import connectors.{AdminConnector, DefaultAdminConnector, DefaultShutteringConnector, ShutteringConnector}
 import controllers._
 import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module}
-import services.{DefaultLoginService, LoginService}
+import services.{DefaultLoginService, DefaultShutteringService, LoginService, ShutteringService}
 
 class ServiceBindings extends Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] =
@@ -32,11 +32,13 @@ class ServiceBindings extends Module {
   )
 
   private def bindConnectors(): Seq[Binding[_]] = Seq(
-    bind(classOf[AdminConnector]).to(classOf[DefaultAdminConnector]).eagerly()
+    bind(classOf[AdminConnector]).to(classOf[DefaultAdminConnector]).eagerly(),
+    bind(classOf[ShutteringConnector]).to(classOf[DefaultShutteringConnector]).eagerly()
   )
 
   private def bindServices(): Seq[Binding[_]] = Seq(
-    bind(classOf[LoginService]).to(classOf[DefaultLoginService]).eagerly()
+    bind(classOf[LoginService]).to(classOf[DefaultLoginService]).eagerly(),
+    bind(classOf[ShutteringService]).to(classOf[DefaultShutteringService]).eagerly()
   )
 
   private def bindControllers(): Seq[Binding[_]] = Seq(
@@ -44,6 +46,7 @@ class ServiceBindings extends Module {
     bind(classOf[DashboardController]).to(classOf[DefaultDashboardController]).eagerly(),
     bind(classOf[EncDecController]).to(classOf[DefaultEncDecController]).eagerly(),
     bind(classOf[HeadersController]).to(classOf[DefaultHeadersController]).eagerly(),
-    bind(classOf[AppIdController]).to(classOf[DefaultAppIdController]).eagerly()
+    bind(classOf[AppIdController]).to(classOf[DefaultAppIdController]).eagerly(),
+    bind(classOf[ShutteringController]).to(classOf[DefaultShutteringController]).eagerly()
   )
 }

@@ -17,7 +17,7 @@
 package helpers.other
 
 import com.cjwwdev.http.verbs.Http
-import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
@@ -38,37 +38,42 @@ trait MockHttp extends BeforeAndAfterEach with MockitoSugar with TestDataGenerat
   }
 
   def mockHttpHead(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.head(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockHttp.head(any(), any())(any()))
       .thenReturn(response)
   }
 
   def mockHttpGet(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.get(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockHttp.get(any(), any())(any()))
       .thenReturn(response)
   }
 
   def mockHttpPost(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.post(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockHttp.post(any(), any(), any(), any())(any(), any(), any()))
       .thenReturn(response)
   }
 
   def mockHttpPostString(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.postString(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockHttp.postString(any(), any(), any(), any())(any()))
       .thenReturn(response)
   }
 
   def mockHttpPut(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.put(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockHttp.put(any(), any(), any(), any())(any(), any(), any()))
       .thenReturn(response)
   }
 
   def mockHttpPatch(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.patch(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockHttp.patch(any(), any(), any(), any())(any(), any(), any()))
+      .thenReturn(response)
+  }
+
+  def mockHttpPatchString(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
+    when(mockHttp.patchString(any(), any(), any(), any())(any()))
       .thenReturn(response)
   }
 
   def mockHttpDelete(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.delete(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockHttp.delete(any(), any())(any()))
       .thenReturn(response)
   }
 }
