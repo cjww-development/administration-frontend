@@ -47,13 +47,18 @@ trait MockHttp extends BeforeAndAfterEach with MockitoSugar with TestDataGenerat
       })
   }
 
-  def mockHttpGet(response: WSResponse): OngoingStubbing[Future[ConnectorResponse]] = {
-    when(mockHttp.get(any(), any())(any(), any()))
-      .thenReturn(if(response.status < 299) {
-        Future.successful(SuccessResponse(response))
-      } else {
-        Future.successful(ErrorResponse(response))
-      })
+  def mockHttpGet(response: WSResponse, error: Boolean = false): OngoingStubbing[Future[ConnectorResponse]] = {
+    if(error) {
+      when(mockHttp.get(any(), any())(any(), any()))
+        .thenReturn(Future.failed(new IllegalStateException("")))
+    } else {
+      when(mockHttp.get(any(), any())(any(), any()))
+        .thenReturn(if(response.status < 299) {
+          Future.successful(SuccessResponse(response))
+        } else {
+          Future.successful(ErrorResponse(response))
+        })
+    }
   }
 
   def mockHttpPost(response: WSResponse): OngoingStubbing[Future[ConnectorResponse]] = {
