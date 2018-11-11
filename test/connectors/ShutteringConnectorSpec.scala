@@ -16,6 +16,7 @@
 
 package connectors
 
+import com.cjwwdev.http.exceptions.ServerErrorException
 import com.cjwwdev.http.verbs.Http
 import helpers.connectors.ConnectorSpec
 
@@ -42,6 +43,14 @@ class ShutteringConnectorSpec extends ConnectorSpec {
   "getShutterState" should {
     "return true" in {
       mockHttpGet(response = Future(fakeHttpResponse(statusCode = OK, bodyContents = "true")))
+
+      awaitAndAssert(testConnector.getShutterState("testService")) {
+        _ mustBe true
+      }
+    }
+
+    "return true if there is a problem connecting" in {
+      mockHttpGet(response = Future.failed(new ServerErrorException("", 500)))
 
       awaitAndAssert(testConnector.getShutterState("testService")) {
         _ mustBe true

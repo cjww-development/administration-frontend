@@ -45,8 +45,8 @@ trait ShutteringController extends FrontendController with Authorisation {
   }
 
   def submit(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    implicit val writesqwe = Json.writes[ServiceShutter]
-    implicit val writes = Json.writes[Shutters]
+    implicit val writesShutter = Json.writes[ServiceShutter]
+    implicit val writes        = Json.writes[Shutters]
     ServiceShutterForm.form.bindFromRequest.fold(
       errs  => Future(BadRequest("BAD")),
       valid => shutteringService.shutterServices(valid.shutterState.map(x => (x.service, x.value)).toMap) map {
