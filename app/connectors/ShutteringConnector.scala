@@ -41,6 +41,10 @@ trait ShutteringConnector extends WsResponseHelpers {
   }
 
   def getShutterState(serviceUrl: String)(implicit request: Request[_]): Future[Boolean] = {
-    http.get(s"$serviceUrl$shutterRoute/state") map(_.toResponseString(needsDecrypt = false).toBoolean)
+    http.get(s"$serviceUrl$shutterRoute/state").map {
+      _.toResponseString(needsDecrypt = false).toBoolean
+    }.recover {
+      case _ => true
+    }
   }
 }

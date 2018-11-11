@@ -17,11 +17,11 @@
 package common
 
 import com.cjwwdev.config.{ConfigurationLoader, DefaultConfigurationLoader}
-import connectors.{AdminConnector, DefaultAdminConnector, DefaultShutteringConnector, ShutteringConnector}
+import connectors._
 import controllers._
 import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module}
-import services.{DefaultLoginService, DefaultShutteringService, LoginService, ShutteringService}
+import services._
 
 class ServiceBindings extends Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] =
@@ -33,12 +33,14 @@ class ServiceBindings extends Module {
 
   private def bindConnectors(): Seq[Binding[_]] = Seq(
     bind(classOf[AdminConnector]).to(classOf[DefaultAdminConnector]).eagerly(),
-    bind(classOf[ShutteringConnector]).to(classOf[DefaultShutteringConnector]).eagerly()
+    bind(classOf[ShutteringConnector]).to(classOf[DefaultShutteringConnector]).eagerly(),
+    bind(classOf[FeatureSwitchConnector]).to(classOf[DefaultFeatureSwitchConnector]).eagerly()
   )
 
   private def bindServices(): Seq[Binding[_]] = Seq(
     bind(classOf[LoginService]).to(classOf[DefaultLoginService]).eagerly(),
-    bind(classOf[ShutteringService]).to(classOf[DefaultShutteringService]).eagerly()
+    bind(classOf[ShutteringService]).to(classOf[DefaultShutteringService]).eagerly(),
+    bind(classOf[FeatureSwitchService]).to(classOf[DefaultFeatureSwitchService]).eagerly()
   )
 
   private def bindControllers(): Seq[Binding[_]] = Seq(
@@ -47,6 +49,7 @@ class ServiceBindings extends Module {
     bind(classOf[EncDecController]).to(classOf[DefaultEncDecController]).eagerly(),
     bind(classOf[HeadersController]).to(classOf[DefaultHeadersController]).eagerly(),
     bind(classOf[AppIdController]).to(classOf[DefaultAppIdController]).eagerly(),
-    bind(classOf[ShutteringController]).to(classOf[DefaultShutteringController]).eagerly()
+    bind(classOf[ShutteringController]).to(classOf[DefaultShutteringController]).eagerly(),
+    bind(classOf[FeatureSwitchController]).to(classOf[DefaultFeatureSwitchController]).eagerly()
   )
 }

@@ -23,6 +23,7 @@ app.common.json                                     =Json
 app.common.enc-or-dec                               =Process
 app.common.generate                                 =Generate
 app.common.shutter                                  =Shutter
+app.common.toggle                                   =Toggle
 
 components.quick-links.dash                         =Dashboard
 components.quick-links.register                     =Register user
@@ -33,6 +34,7 @@ components.quick-links.enc-dec.sha                  =SHA512
 components.quick-links.enc-dec.ds                   =Data security
 components.quick-links.uuid                         =Generate UUID
 components.quick-links.shuttering                   =Service Shuttering
+components.quick-links.feature-switch               =Feature switching
 
 pages.incorrect-permissions.title                   =You are not allowed here
 pages.incorrect-permissions.heading                 =Woah
@@ -101,4 +103,8 @@ pages.uuid.help                                     =This utility generates a UU
 
 pages.shuttering.title                              =Service shuttering
 pages.shuttering.heading                            =Service shuttering
+
+pages.feature-switch.title                          =Feature switching
+pages.feature-switch.heading                        =Feature switching
+pages.feature-switch.no-features                    =This service doesn''t have have any configured features
 
