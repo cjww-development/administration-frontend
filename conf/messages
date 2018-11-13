@@ -35,6 +35,7 @@ components.quick-links.enc-dec.ds                   =Data security
 components.quick-links.uuid                         =Generate UUID
 components.quick-links.shuttering                   =Service Shuttering
 components.quick-links.feature-switch               =Feature switching
+components.quick-links.service-health               =Service health
 
 pages.incorrect-permissions.title                   =You are not allowed here
 pages.incorrect-permissions.heading                 =Woah
@@ -107,4 +108,7 @@ pages.shuttering.heading                            =Service shuttering
 pages.feature-switch.title                          =Feature switching
 pages.feature-switch.heading                        =Feature switching
 pages.feature-switch.no-features                    =This service doesn''t have have any configured features
+
+pages.service-health.title                          =Service health
+pages.service-health.heading                        =Service health
 

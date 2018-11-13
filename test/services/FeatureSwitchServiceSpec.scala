@@ -52,7 +52,7 @@ class FeatureSwitchServiceSpec extends ServiceSpec {
       awaitAndAssert(testService.getFeatures) {
         _ mustBe Map(
           "service1" -> List(Feature("feature", state = false)),
-          "service2"  -> List()
+          "service2" -> List()
         )
       }
     }
