@@ -34,13 +34,15 @@ class ServiceBindings extends Module {
   private def bindConnectors(): Seq[Binding[_]] = Seq(
     bind(classOf[AdminConnector]).to(classOf[DefaultAdminConnector]).eagerly(),
     bind(classOf[ShutteringConnector]).to(classOf[DefaultShutteringConnector]).eagerly(),
-    bind(classOf[FeatureSwitchConnector]).to(classOf[DefaultFeatureSwitchConnector]).eagerly()
+    bind(classOf[FeatureSwitchConnector]).to(classOf[DefaultFeatureSwitchConnector]).eagerly(),
+    bind(classOf[HealthConnector]).to(classOf[DefaultHealthConnector]).eagerly()
   )
 
   private def bindServices(): Seq[Binding[_]] = Seq(
     bind(classOf[LoginService]).to(classOf[DefaultLoginService]).eagerly(),
     bind(classOf[ShutteringService]).to(classOf[DefaultShutteringService]).eagerly(),
-    bind(classOf[FeatureSwitchService]).to(classOf[DefaultFeatureSwitchService]).eagerly()
+    bind(classOf[FeatureSwitchService]).to(classOf[DefaultFeatureSwitchService]).eagerly(),
+    bind(classOf[HealthService]).to(classOf[DefaultHealthService]).eagerly()
   )
 
   private def bindControllers(): Seq[Binding[_]] = Seq(
@@ -50,6 +52,7 @@ class ServiceBindings extends Module {
     bind(classOf[HeadersController]).to(classOf[DefaultHeadersController]).eagerly(),
     bind(classOf[AppIdController]).to(classOf[DefaultAppIdController]).eagerly(),
     bind(classOf[ShutteringController]).to(classOf[DefaultShutteringController]).eagerly(),
-    bind(classOf[FeatureSwitchController]).to(classOf[DefaultFeatureSwitchController]).eagerly()
+    bind(classOf[FeatureSwitchController]).to(classOf[DefaultFeatureSwitchController]).eagerly(),
+    bind(classOf[AppStateController]).to(classOf[DefaultAppStateController]).eagerly()
   )
 }

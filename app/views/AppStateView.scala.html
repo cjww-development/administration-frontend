@@ -1,0 +1,54 @@
+@import com.cjwwdev.frontendUI.builders.NavBarLinkBuilder
+@import com.cjwwdev.views.html.templates.AdminMainTemplate
+@import com.cjwwdev.views.html.helpers.{errorPanel, textInput}
+@import helper._
+@import views.html.components.QuickLinks
+@import common.Permissions._
+@import common.ThumbNails
+
+@import services.HealthStatus
+@import services.Healthy
+@import services.Unknown
+@import services.Problems
+
+@(serviceStatuses: Map[String, HealthStatus])(implicit request: Request[_], user: AccountDetails, messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
+
+@matchState(state: HealthStatus) = @{
+    state match {
+        case Healthy  => "alert-success"
+        case Unknown  => "alert-warning"
+        case Problems => "alert-danger"
+    }
+}
+
+@AdminMainTemplate(title = messages("pages.service-health.title"), links, navBarRoutes){
+    <div class="top-block-single">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="page-header">
+                        <h2 id="quick-links" class="pageTitle">@messages("pages.dashboard.quick-links.heading")</h2>
+                    </div>
+
+                    @QuickLinks()
+                </div>
+
+                <div class="col-md-9">
+                    <div class="page-header">
+                        <h2 id="main-heading" class="pageTitle">@messages("pages.service-health.heading")</h2>
+                    </div>
+
+                    @for(row <- serviceStatuses.toList.grouped(3)) {
+                        <div class="row">
+                        @for((service, state) <- row) {
+                            <div class="col-md-4">
+                                <div class="alert @matchState(state) text-center" role="alert">@service</div>
+                            </div>
+                        }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
