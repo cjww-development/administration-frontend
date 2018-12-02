@@ -16,16 +16,12 @@
 
 package connectors
 
-import akka.pattern.FutureTimeoutSupport
 import com.cjwwdev.config.ConfigurationLoader
-import com.cjwwdev.http.exceptions._
 import com.cjwwdev.http.verbs.Http
 import javax.inject.Inject
 import play.api.mvc.Request
-import play.api.http.Status._
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Future, ExecutionContext => ExC}
 
 class DefaultHealthConnector @Inject()(val http: Http,
                                        val config: ConfigurationLoader) extends HealthConnector {
@@ -38,17 +34,9 @@ trait HealthConnector {
 
   val healthRoute: String
 
-  def getHealthStatus(serviceUrl: String)(implicit request: Request[_]): Future[Int] = {
-    http.get(s"$serviceUrl$healthRoute").map {
-      _.status
-    } recover {
-      case _: BadRequestException    => BAD_REQUEST
-      case _: ForbiddenException     => FORBIDDEN
-      case _: NotFoundException      => NOT_FOUND
-      case _: NotAcceptableException => NOT_ACCEPTABLE
-      case _: ConflictException      => CONFLICT
-      case e: ClientErrorException   => e.getStatusCode
-      case e: ServerErrorException   => e.getStatusCode
+  def getHealthStatus(serviceUrl: String)(implicit request: Request[_], ec: ExC): Future[Int] = {
+    http.get(s"$serviceUrl$healthRoute") map {
+      _.fold(_.status, _.status)
     }
   }
 }

@@ -24,14 +24,14 @@ import javax.inject.Inject
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import views.html.UUIDGeneratorView
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 class DefaultAppIdController @Inject()(val adminConnector: AdminConnector,
-                                       val controllerComponents: ControllerComponents) extends AppIdController
+                                       val controllerComponents: ControllerComponents,
+                                       implicit val ec: ExecutionContext) extends AppIdController
 
 trait AppIdController extends FrontendController with Authorisation {
   def showUUIDGenerator(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    Future(Ok(UUIDGeneratorView(UUID.randomUUID().toString)))
+    Future.successful(Ok(UUIDGeneratorView(UUID.randomUUID().toString)))
   }
 }

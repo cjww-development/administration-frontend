@@ -17,6 +17,7 @@
 package helpers.other
 
 import com.cjwwdev.http.verbs.Http
+import com.cjwwdev.http.responses.EvaluateResponse.{ConnectorResponse, SuccessResponse, ErrorResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
@@ -37,43 +38,75 @@ trait MockHttp extends BeforeAndAfterEach with MockitoSugar with TestDataGenerat
     reset(mockHttp)
   }
 
-  def mockHttpHead(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.head(any(), any())(any()))
-      .thenReturn(response)
+  def mockHttpHead(response: WSResponse): OngoingStubbing[Future[ConnectorResponse]] = {
+    when(mockHttp.head(any(), any())(any(), any()))
+      .thenReturn(if(response.status < 299) {
+        Future.successful(SuccessResponse(response))
+      } else {
+        Future.successful(ErrorResponse(response))
+      })
   }
 
-  def mockHttpGet(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.get(any(), any())(any()))
-      .thenReturn(response)
+  def mockHttpGet(response: WSResponse): OngoingStubbing[Future[ConnectorResponse]] = {
+    when(mockHttp.get(any(), any())(any(), any()))
+      .thenReturn(if(response.status < 299) {
+        Future.successful(SuccessResponse(response))
+      } else {
+        Future.successful(ErrorResponse(response))
+      })
   }
 
-  def mockHttpPost(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.post(any(), any(), any(), any())(any(), any(), any()))
-      .thenReturn(response)
+  def mockHttpPost(response: WSResponse): OngoingStubbing[Future[ConnectorResponse]] = {
+    when(mockHttp.post(any(), any(), any(), any())(any(), any(), any(), any()))
+      .thenReturn(if(response.status < 299) {
+        Future.successful(SuccessResponse(response))
+      } else {
+        Future.successful(ErrorResponse(response))
+      })
   }
 
-  def mockHttpPostString(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.postString(any(), any(), any(), any())(any()))
-      .thenReturn(response)
+  def mockHttpPostString(response: WSResponse): OngoingStubbing[Future[ConnectorResponse]] = {
+    when(mockHttp.postString(any(), any(), any(), any())(any(), any()))
+      .thenReturn(if(response.status < 299) {
+        Future.successful(SuccessResponse(response))
+      } else {
+        Future.successful(ErrorResponse(response))
+      })
   }
 
-  def mockHttpPut(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.put(any(), any(), any(), any())(any(), any(), any()))
-      .thenReturn(response)
+  def mockHttpPut(response: WSResponse): OngoingStubbing[Future[ConnectorResponse]] = {
+    when(mockHttp.put(any(), any(), any(), any())(any(), any(), any(), any()))
+      .thenReturn(if(response.status < 299) {
+        Future.successful(SuccessResponse(response))
+      } else {
+        Future.successful(ErrorResponse(response))
+      })
   }
 
-  def mockHttpPatch(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.patch(any(), any(), any(), any())(any(), any(), any()))
-      .thenReturn(response)
+  def mockHttpPatch(response: WSResponse): OngoingStubbing[Future[ConnectorResponse]] = {
+    when(mockHttp.patch(any(), any(), any(), any())(any(), any(), any(), any()))
+      .thenReturn(if(response.status < 299) {
+        Future.successful(SuccessResponse(response))
+      } else {
+        Future.successful(ErrorResponse(response))
+      })
   }
 
-  def mockHttpPatchString(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.patchString(any(), any(), any(), any())(any()))
-      .thenReturn(response)
+  def mockHttpPatchString(response: WSResponse): OngoingStubbing[Future[ConnectorResponse]] = {
+    when(mockHttp.patchString(any(), any(), any(), any())(any(), any()))
+      .thenReturn(if(response.status < 299) {
+        Future.successful(SuccessResponse(response))
+      } else {
+        Future.successful(ErrorResponse(response))
+      })
   }
 
-  def mockHttpDelete(response: Future[WSResponse]): OngoingStubbing[Future[WSResponse]] = {
-    when(mockHttp.delete(any(), any())(any()))
-      .thenReturn(response)
+  def mockHttpDelete(response: WSResponse): OngoingStubbing[Future[ConnectorResponse]] = {
+    when(mockHttp.delete(any(), any())(any(), any()))
+      .thenReturn(if(response.status < 299) {
+        Future.successful(SuccessResponse(response))
+      } else {
+        Future.successful(ErrorResponse(response))
+      })
   }
 }

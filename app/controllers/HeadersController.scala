@@ -25,17 +25,17 @@ import javax.inject.Inject
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import views.html.GenerateHeadersView
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 class DefaultHeadersController @Inject()(val adminConnector: AdminConnector,
-                                         val controllerComponents: ControllerComponents) extends HeadersController
+                                         val controllerComponents: ControllerComponents,
+                                         implicit val ec: ExecutionContext) extends HeadersController
 
 trait HeadersController extends FrontendController with Authorisation {
 
   def headers(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
     permissionsGuard(Permissions.headers) {
-      Future(Ok(GenerateHeadersView(HeadersForm.form)))
+      Future.successful(Ok(GenerateHeadersView(HeadersForm.form)))
     }
   }
 
@@ -46,7 +46,7 @@ trait HeadersController extends FrontendController with Authorisation {
         tuple  => {
           val (appId, cookieId) = tuple
           val headerPackage: Option[String] = Some(HeaderPackage(appId, cookieId).encrypt)
-          Future(Ok(GenerateHeadersView(HeadersForm.form.fill(tuple), header = headerPackage)))
+          Future.successful(Ok(GenerateHeadersView(HeadersForm.form.fill(tuple), header = headerPackage)))
         }
       )
     }

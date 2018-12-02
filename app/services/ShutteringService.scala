@@ -21,8 +21,7 @@ import connectors.ShutteringConnector
 import javax.inject.Inject
 import play.api.mvc.Request
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext => ExC, Future}
 
 class DefaultShutteringService @Inject()(val shutteringConnector: ShutteringConnector,
                                          val config: ConfigurationLoader) extends ShutteringService {
@@ -40,14 +39,14 @@ trait ShutteringService {
 
   val serviceUrls: Map[String, String]
 
-   def shutterServices(shutterValues: Map[String, Boolean])(implicit request: Request[_]): Future[Map[String, Boolean]] = {
+   def shutterServices(shutterValues: Map[String, Boolean])(implicit request: Request[_], ec: ExC): Future[Map[String, Boolean]] = {
      val valuesAndUrls = shutterValues.map { case (service, value) => serviceUrls(service) -> value }
      Future
        .sequence(valuesAndUrls.map { case (service, value) => shutteringConnector.shutterService(service, value) })
        .map(_ => shutterValues)
    }
 
-  def getShutterStates(implicit request: Request[_]): Future[Map[String, Boolean]] = {
+  def getShutterStates(implicit request: Request[_], ec: ExC): Future[Map[String, Boolean]] = {
     Future
       .sequence(serviceUrls map { case (service, url) => shutteringConnector.getShutterState(url).map(service -> _)})
       .map(_.toMap)

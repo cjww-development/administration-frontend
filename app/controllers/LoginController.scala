@@ -23,11 +23,11 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import services.LoginService
 import views.html.LoginView
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 class DefaultLoginController @Inject()(val controllerComponents: ControllerComponents,
-                                       val loginService: LoginService) extends LoginController
+                                       val loginService: LoginService,
+                                       implicit val ec: ExecutionContext) extends LoginController
 
 trait LoginController extends FrontendController {
 

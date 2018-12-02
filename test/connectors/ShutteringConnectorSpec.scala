@@ -16,23 +16,21 @@
 
 package connectors
 
-import com.cjwwdev.http.exceptions.ServerErrorException
 import com.cjwwdev.http.verbs.Http
 import helpers.connectors.ConnectorSpec
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class ShutteringConnectorSpec extends ConnectorSpec {
 
-  val testConnector = new ShutteringConnector {
+  private val testConnector = new ShutteringConnector {
     override val http: Http           = mockHttp
     override val shutterRoute: String = "/test/uri"
   }
 
   "shutterService" should {
     "return a 204" in {
-      mockHttpPatchString(response = Future(fakeHttpResponse(statusCode = NO_CONTENT)))
+      mockHttpPatchString(response = fakeHttpResponse(statusCode = NO_CONTENT))
 
       awaitAndAssert(testConnector.shutterService("testService", shutter = true)) {
         _.status mustBe NO_CONTENT
@@ -42,7 +40,7 @@ class ShutteringConnectorSpec extends ConnectorSpec {
 
   "getShutterState" should {
     "return true" in {
-      mockHttpGet(response = Future(fakeHttpResponse(statusCode = OK, bodyContents = "true")))
+      mockHttpGet(response = fakeHttpResponse(statusCode = OK, bodyContents = "true"))
 
       awaitAndAssert(testConnector.getShutterState("testService")) {
         _ mustBe true
@@ -50,7 +48,7 @@ class ShutteringConnectorSpec extends ConnectorSpec {
     }
 
     "return true if there is a problem connecting" in {
-      mockHttpGet(response = Future.failed(new ServerErrorException("", 500)))
+      mockHttpGet(response = fakeHttpResponse(statusCode = INTERNAL_SERVER_ERROR))
 
       awaitAndAssert(testConnector.getShutterState("testService")) {
         _ mustBe true
@@ -58,7 +56,7 @@ class ShutteringConnectorSpec extends ConnectorSpec {
     }
 
     "return false" in {
-      mockHttpGet(response = Future(fakeHttpResponse(statusCode = OK, bodyContents = "false")))
+      mockHttpGet(response = fakeHttpResponse(statusCode = OK, bodyContents = "false"))
 
       awaitAndAssert(testConnector.getShutterState("testService")) {
         _ mustBe false

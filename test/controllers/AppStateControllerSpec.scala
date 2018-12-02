@@ -18,26 +18,28 @@ package controllers
 
 import connectors.AdminConnector
 import helpers.controllers.ControllerSpec
-import play.api.mvc.ControllerComponents
+import play.api.mvc.{AnyContentAsEmpty, ControllerComponents}
 import play.api.test.Helpers._
 import services.{HealthService, Healthy}
 import org.mockito.Mockito.when
 import org.mockito.ArgumentMatchers.any
+import play.api.test.FakeRequest
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class AppStateControllerSpec extends ControllerSpec {
 
-  val mockHealthService = mock[HealthService]
+  private val mockHealthService = mock[HealthService]
 
-  val testController = new AppStateController {
+  private val testController = new AppStateController {
     override val healthService: HealthService                         = mockHealthService
     override val adminConnector: AdminConnector                       = mockAdminConnector
     override protected def controllerComponents: ControllerComponents = stubControllerComponents()
+    override implicit val ec: ExecutionContext                        = global
   }
 
-  lazy val requestWithSession = request.withSession(
+  lazy val requestWithSession: FakeRequest[AnyContentAsEmpty.type] = request.withSession(
     "cookieId" -> generateTestSystemId(MANAGEMENT),
     "username" -> testAccount.username
   )
@@ -46,8 +48,8 @@ class AppStateControllerSpec extends ControllerSpec {
     "return an Ok" in {
       mockGetManagementUser(found = true)
 
-      when(mockHealthService.getServicesHealth(any()))
-        .thenReturn(Future(Map(
+      when(mockHealthService.getServicesHealth(any(), any()))
+        .thenReturn(Future.successful(Map(
           "service1" -> Healthy,
           "service2" -> Healthy
         )))

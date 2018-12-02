@@ -24,28 +24,28 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import views.html.{DashboardView, RegisterNewUserView, UserView, UsersOverviewView}
 import views.html.StandardErrorView
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class DefaultDashboardController @Inject()(val controllerComponents: ControllerComponents,
-                                           val adminConnector: AdminConnector) extends DashboardController
+                                           val adminConnector: AdminConnector,
+                                           implicit val ec: ExecutionContext) extends DashboardController
 
 trait DashboardController extends FrontendController with Authorisation {
 
   def dashboard(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
-    Future(Ok(DashboardView()))
+    Future.successful(Ok(DashboardView()))
   }
 
   def registerUser(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
     permissionsGuard(Permissions.rootOnly) {
-      Future(Ok(RegisterNewUserView(RegistrationForm.form)))
+      Future.successful(Ok(RegisterNewUserView(RegistrationForm.form)))
     }
   }
 
   def registerUserSubmit(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
     permissionsGuard(Permissions.rootOnly) {
       RegistrationForm.form.bindFromRequest.fold(
-        errors  => Future(BadRequest(RegisterNewUserView(errors))),
+        errors  => Future.successful(BadRequest(RegisterNewUserView(errors))),
         newUser => adminConnector.registerNewUser(newUser) map {
           if(_) {
             Redirect(routes.DashboardController.usersOverview())

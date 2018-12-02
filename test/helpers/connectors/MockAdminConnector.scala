@@ -16,7 +16,6 @@
 
 package helpers.connectors
 
-import com.cjwwdev.http.exceptions.NotFoundException
 import connectors.AdminConnector
 import helpers.other.Fixtures
 import models.AccountDetails
@@ -41,17 +40,17 @@ trait MockAdminConnector extends BeforeAndAfterEach with MockitoSugar with Fixtu
   }
 
   def mockRegisterNewUser(registered: Boolean): OngoingStubbing[Future[Boolean]] = {
-    when(mockAdminConnector.registerNewUser(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockAdminConnector.registerNewUser(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future(registered))
   }
 
   def mockAuthenticateUser(authenticated: Boolean): OngoingStubbing[Future[Option[String]]] = {
-    when(mockAdminConnector.authenticateUser(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockAdminConnector.authenticateUser(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future(if(authenticated) Some(generateTestSystemId(MANAGEMENT)) else None))
   }
 
   def mockGetManagementUser(found: Boolean, permissions: List[String] = List.empty[String]): OngoingStubbing[Future[AccountDetails]] = {
-    when(mockAdminConnector.getManagementUser(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockAdminConnector.getManagementUser(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(if(found) {
         Future(if(permissions.isEmpty) {
           testAccountDetails
@@ -59,17 +58,17 @@ trait MockAdminConnector extends BeforeAndAfterEach with MockitoSugar with Fixtu
           testAccountDetails.copy(permissions = permissions)
         })
       } else {
-        Future.failed(new NotFoundException(""))
+        Future.failed(new MatchError(""))
       })
   }
 
   def mockGetAllManagementUsers(populated: Boolean): OngoingStubbing[Future[List[AccountDetails]]] = {
-    when(mockAdminConnector.getAllManagementUsers(ArgumentMatchers.any()))
+    when(mockAdminConnector.getAllManagementUsers(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future(if(populated) List(testAccountDetails) else List.empty[AccountDetails]))
   }
 
   def mockDeleteManagementUser(deleted: Boolean): OngoingStubbing[Future[Boolean]] = {
-    when(mockAdminConnector.deleteManagementUser(ArgumentMatchers.any())(ArgumentMatchers.any()))
+    when(mockAdminConnector.deleteManagementUser(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future(deleted))
   }
 }

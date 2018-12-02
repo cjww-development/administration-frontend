@@ -16,23 +16,21 @@
 
 package connectors
 
-import com.cjwwdev.http.exceptions._
 import com.cjwwdev.http.verbs.Http
 import helpers.connectors.ConnectorSpec
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class HealthConnectorSpec extends ConnectorSpec {
 
-  val testConnector = new HealthConnector {
+  private val testConnector = new HealthConnector {
     override val http: Http          = mockHttp
     override val healthRoute: String = "/test/health/route"
   }
 
   "getHealthStatus" should {
     "return an Ok" in {
-      mockHttpGet(response = Future(fakeHttpResponse(OK)))
+      mockHttpGet(response = fakeHttpResponse(OK))
 
       awaitAndAssert(testConnector.getHealthStatus("/test/service")) {
         _ mustBe OK
@@ -40,7 +38,7 @@ class HealthConnectorSpec extends ConnectorSpec {
     }
 
     "return a Bad request" in {
-      mockHttpGet(response = Future.failed(new BadRequestException("")))
+      mockHttpGet(response = fakeHttpResponse(BAD_REQUEST))
 
       awaitAndAssert(testConnector.getHealthStatus("/test/service")) {
         _ mustBe BAD_REQUEST
@@ -48,7 +46,7 @@ class HealthConnectorSpec extends ConnectorSpec {
     }
 
     "return a Forbidden" in {
-      mockHttpGet(response = Future.failed(new ForbiddenException("")))
+      mockHttpGet(response = fakeHttpResponse(FORBIDDEN))
 
       awaitAndAssert(testConnector.getHealthStatus("/test/service")) {
         _ mustBe FORBIDDEN
@@ -56,7 +54,7 @@ class HealthConnectorSpec extends ConnectorSpec {
     }
 
     "return a Not found" in {
-      mockHttpGet(response = Future.failed(new NotFoundException("")))
+      mockHttpGet(response = fakeHttpResponse(NOT_FOUND))
 
       awaitAndAssert(testConnector.getHealthStatus("/test/service")) {
         _ mustBe NOT_FOUND
@@ -64,7 +62,7 @@ class HealthConnectorSpec extends ConnectorSpec {
     }
 
     "return a Not acceptable" in {
-      mockHttpGet(response = Future.failed(new NotAcceptableException("")))
+      mockHttpGet(response = fakeHttpResponse(NOT_ACCEPTABLE))
 
       awaitAndAssert(testConnector.getHealthStatus("/test/service")) {
         _ mustBe NOT_ACCEPTABLE
@@ -72,7 +70,7 @@ class HealthConnectorSpec extends ConnectorSpec {
     }
 
     "return a Conflict" in {
-      mockHttpGet(response = Future.failed(new ConflictException("")))
+      mockHttpGet(response = fakeHttpResponse(CONFLICT))
 
       awaitAndAssert(testConnector.getHealthStatus("/test/service")) {
         _ mustBe CONFLICT
@@ -80,7 +78,7 @@ class HealthConnectorSpec extends ConnectorSpec {
     }
 
     "return some 4xx status" in {
-      mockHttpGet(response = Future.failed(new ClientErrorException("", UNAUTHORIZED)))
+      mockHttpGet(response = fakeHttpResponse(UNAUTHORIZED))
 
       awaitAndAssert(testConnector.getHealthStatus("/test/service")) {
         _ mustBe UNAUTHORIZED
@@ -88,7 +86,7 @@ class HealthConnectorSpec extends ConnectorSpec {
     }
 
     "return some 5xx status" in {
-      mockHttpGet(response = Future.failed(new ServerErrorException("", INTERNAL_SERVER_ERROR)))
+      mockHttpGet(response = fakeHttpResponse(INTERNAL_SERVER_ERROR))
 
       awaitAndAssert(testConnector.getHealthStatus("/test/service")) {
         _ mustBe INTERNAL_SERVER_ERROR

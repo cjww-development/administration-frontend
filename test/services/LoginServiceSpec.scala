@@ -18,23 +18,23 @@ package services
 
 import connectors.AdminConnector
 import helpers.services.ServiceSpec
-import play.api.mvc.Session
+import play.api.mvc.{AnyContentAsEmpty, Session}
 import play.api.test.FakeRequest
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class LoginServiceSpec extends ServiceSpec {
 
-  val testService = new LoginService {
+  private val testService = new LoginService {
     override val adminConnector: AdminConnector = mockAdminConnector
   }
 
-  val testSessionMap = Map(
+  private val testSessionMap = Map(
     "cookieId" -> generateTestSystemId(MANAGEMENT),
     "username" -> testAccount.username
   )
 
-  implicit lazy val request = FakeRequest()
+  implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   "processLoginAttempt" should {
     "return a Session" when {

@@ -16,10 +16,14 @@
 
 package common
 
-import com.cjwwdev.logging.Logging
+import com.cjwwdev.logging.output.Logger
 import play.api.i18n.Lang
 import play.api.mvc.{BaseController, ControllerHelpers, Request}
 
-trait FrontendController extends BaseController with ControllerHelpers with AppConfig with Logging {
+import scala.concurrent.ExecutionContext
+
+trait FrontendController extends BaseController with ControllerHelpers with AppConfig with Logger {
   implicit def getLang(implicit request: Request[_]): Lang = supportedLangs.preferred(request.acceptLanguages)
+
+  implicit val ec: ExecutionContext
 }

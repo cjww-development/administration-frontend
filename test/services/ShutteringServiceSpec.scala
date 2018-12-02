@@ -22,17 +22,18 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.NO_CONTENT
 import org.mockito.Mockito.when
 import org.mockito.ArgumentMatchers.any
+import play.api.mvc.AnyContentAsEmpty
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class ShutteringServiceSpec extends ServiceSpec {
 
-  val mockShutteringConnector = mock[ShutteringConnector]
+  private val mockShutteringConnector = mock[ShutteringConnector]
 
-  implicit val fakeRequest = FakeRequest()
+  implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  val testService = new ShutteringService {
+  private val testService = new ShutteringService {
     override val shutteringConnector: ShutteringConnector = mockShutteringConnector
     override val serviceUrls: Map[String, String]         = Map(
       "service-1" -> "/test/service-1",
@@ -41,7 +42,7 @@ class ShutteringServiceSpec extends ServiceSpec {
     )
   }
 
-  val shutterValues = Map(
+  private val shutterValues = Map(
     "service-1" -> false,
     "service-2" -> true,
     "service-3" -> false
@@ -49,11 +50,11 @@ class ShutteringServiceSpec extends ServiceSpec {
 
   "shutterServices" should {
     "a map of services to shutter states" in {
-      when(mockShutteringConnector.shutterService(any(), any())(any()))
+      when(mockShutteringConnector.shutterService(any(), any())(any(), any()))
         .thenReturn(
-          Future(fakeHttpResponse(statusCode = NO_CONTENT)),
-          Future(fakeHttpResponse(statusCode = NO_CONTENT)),
-          Future(fakeHttpResponse(statusCode = NO_CONTENT))
+          Future.successful(fakeHttpResponse(statusCode = NO_CONTENT)),
+          Future.successful(fakeHttpResponse(statusCode = NO_CONTENT)),
+          Future.successful(fakeHttpResponse(statusCode = NO_CONTENT))
         )
 
       awaitAndAssert(testService.shutterServices(shutterValues)) {
@@ -64,11 +65,11 @@ class ShutteringServiceSpec extends ServiceSpec {
 
   "getShutterStates" should {
     "a map of services to shutter states" in {
-      when(mockShutteringConnector.getShutterState(any())(any()))
+      when(mockShutteringConnector.getShutterState(any())(any(), any()))
         .thenReturn(
-          Future(false),
-          Future(true),
-          Future(false)
+          Future.successful(false),
+          Future.successful(true),
+          Future.successful(false)
         )
 
       awaitAndAssert(testService.getShutterStates) {

@@ -22,8 +22,7 @@ import javax.inject.Inject
 import models.Feature
 import play.api.mvc.Request
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext => ExC, Future}
 
 class DefaultFeatureSwitchService @Inject()(val featureSwitchConnector: FeatureSwitchConnector,
                                             val config: ConfigurationLoader) extends FeatureSwitchService {
@@ -41,13 +40,13 @@ trait FeatureSwitchService {
 
   val serviceUrls: Map[String, String]
 
-  def getFeatures(implicit request: Request[_]): Future[Map[String, List[Feature]]] = {
+  def getFeatures(implicit request: Request[_], ec: ExC): Future[Map[String, List[Feature]]] = {
     Future
       .sequence(serviceUrls map { case (service, url) => featureSwitchConnector.getAllFeatureStates(url) map(service -> _)})
       .map(_.toMap)
   }
 
-  def setFeature(service: String, featureSet: List[Feature])(implicit request: Request[_]): Future[List[Feature]] = {
+  def setFeature(service: String, featureSet: List[Feature])(implicit request: Request[_], ec: ExC): Future[List[Feature]] = {
     Future
       .sequence(featureSet collect { case feature if !feature.name.contains("[")  =>
         featureSwitchConnector.setFeatureState(serviceUrls(service), feature.name, feature.state)

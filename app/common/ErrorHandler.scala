@@ -16,7 +16,6 @@
 
 package common
 
-import com.cjwwdev.http.exceptions.ForbiddenException
 import com.cjwwdev.logging.Logging
 import com.cjwwdev.request.RequestBuilder
 import views.html.{NotFoundView, ServerErrorView, StandardErrorView}
@@ -55,9 +54,6 @@ class ErrorHandler @Inject()(env: Environment,
     logger.error(s"[ErrorHandler] - [onServerError] - exception : $exception")
     exception.printStackTrace()
     implicit val req: Request[String] = RequestBuilder.buildRequest[String](request, "")
-    exception match {
-      case _: ForbiddenException => Future.successful(Redirect(routes.LoginController.login().absoluteURL()).withNewSession)
-      case _                     => Future.successful(InternalServerError(ServerErrorView()))
-    }
+    Future.successful(InternalServerError(ServerErrorView()))
   }
 }

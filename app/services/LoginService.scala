@@ -22,8 +22,7 @@ import javax.inject.Inject
 import models.{AccountDetails, Credentials}
 import play.api.mvc.{Request, Session}
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext => ExC, Future}
 
 class DefaultLoginService @Inject()(val adminConnector: AdminConnector) extends LoginService
 
@@ -31,7 +30,7 @@ trait LoginService extends Logging {
 
   val adminConnector: AdminConnector
 
-  def processLoginAttempt(creds: Credentials)(implicit request: Request[_]): Future[Option[Session]] = {
+  def processLoginAttempt(creds: Credentials)(implicit request: Request[_], ec: ExC): Future[Option[Session]] = {
     adminConnector.authenticateUser(creds) flatMap {
       _.fold(Future(Option.empty[Session])) { managementId =>
         adminConnector.getManagementUser(managementId) map { user =>

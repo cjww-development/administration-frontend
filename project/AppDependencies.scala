@@ -22,11 +22,12 @@ object AppDependencies {
 }
 
 private object CompileDependencies {
-  private val appUtilsVersion      = "4.5.2"
-  private val authorisationVersion = "4.6.0"
+  private val appUtilsVersion      = "4.6.1"
+  private val authorisationVersion = "4.7.0"
   private val frontendUIVersion    = "2.8.2"
-  private val httpVerbsVersion     = "3.4.0"
+  private val httpVerbsVersion     = "3.5.1"
   private val serviceHealthVersion = "0.3.1"
+  private val loggingUtilsVersion  = "1.2.5"
 
   private val playImports: Seq[ModuleID] = Seq(filters, guice)
 
@@ -35,7 +36,8 @@ private object CompileDependencies {
     "com.cjww-dev.libs" % "authorisation_2.12"         % authorisationVersion,
     "com.cjww-dev.libs" % "application-utilities_2.12" % appUtilsVersion,
     "com.cjww-dev.libs" % "frontend-ui_2.12"           % frontendUIVersion,
-    "com.cjww-dev.libs" % "service-health_2.12"        % serviceHealthVersion
+    "com.cjww-dev.libs" % "service-health_2.12"        % serviceHealthVersion,
+    "com.cjww-dev.libs" % "logging-utils_2.12"         % loggingUtilsVersion
   )
 
   def apply(): Seq[ModuleID] = compileDependencies ++ playImports

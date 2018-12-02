@@ -17,6 +17,8 @@
 package common
 
 import com.cjwwdev.config.{ConfigurationLoader, DefaultConfigurationLoader}
+import com.cjwwdev.http.headers.filters.{DefaultHeadersFilter, HeadersFilter}
+import com.cjwwdev.logging.filters.{DefaultRequestLoggingFilter, RequestLoggingFilter}
 import connectors._
 import controllers._
 import play.api.{Configuration, Environment}
@@ -28,7 +30,9 @@ class ServiceBindings extends Module {
     bindOther() ++ bindConnectors() ++ bindServices() ++ bindControllers()
 
   private def bindOther(): Seq[Binding[_]] = Seq(
-    bind(classOf[ConfigurationLoader]).to(classOf[DefaultConfigurationLoader]).eagerly()
+    bind(classOf[ConfigurationLoader]).to(classOf[DefaultConfigurationLoader]).eagerly(),
+    bind(classOf[RequestLoggingFilter]).to(classOf[DefaultRequestLoggingFilter]).eagerly(),
+    bind(classOf[HeadersFilter]).to(classOf[DefaultHeadersFilter]).eagerly()
   )
 
   private def bindConnectors(): Seq[Binding[_]] = Seq(
