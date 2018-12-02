@@ -21,6 +21,7 @@ import helpers.services.ServiceSpec
 import models.Feature
 import org.mockito.Mockito.when
 import org.mockito.ArgumentMatchers.any
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.OK
 
@@ -29,9 +30,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class FeatureSwitchServiceSpec extends ServiceSpec {
 
-  val mockFeatureSwitchConnector = mock[FeatureSwitchConnector]
+  private val mockFeatureSwitchConnector = mock[FeatureSwitchConnector]
 
-  val testService = new FeatureSwitchService {
+  private val testService = new FeatureSwitchService {
     override val featureSwitchConnector: FeatureSwitchConnector = mockFeatureSwitchConnector
     override val serviceUrls: Map[String, String]               = Map(
       "service1" -> "/test/service1",
@@ -39,14 +40,14 @@ class FeatureSwitchServiceSpec extends ServiceSpec {
     )
   }
 
-  implicit lazy val request = FakeRequest()
+  implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   "getFeatures" should {
     "return a map of string -> list of features" in {
-      when(mockFeatureSwitchConnector.getAllFeatureStates(any())(any()))
+      when(mockFeatureSwitchConnector.getAllFeatureStates(any())(any(), any()))
         .thenReturn(
-          Future(List(Feature("feature", state = false))),
-          Future(List())
+          Future.successful(List(Feature("feature", state = false))),
+          Future.successful(List())
         )
 
       awaitAndAssert(testService.getFeatures) {
@@ -60,7 +61,7 @@ class FeatureSwitchServiceSpec extends ServiceSpec {
 
   "setFeature" should {
     "return the supplied list of features" in {
-      when(mockFeatureSwitchConnector.setFeatureState(any(), any(), any())(any()))
+      when(mockFeatureSwitchConnector.setFeatureState(any(), any(), any())(any(), any()))
         .thenReturn(Future(fakeHttpResponse(OK)))
 
       awaitAndAssert(testService.setFeature("service1", List(Feature("feature", state = false)))) {

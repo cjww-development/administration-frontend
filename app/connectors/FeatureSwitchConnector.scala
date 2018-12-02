@@ -17,6 +17,7 @@
 package connectors
 
 import com.cjwwdev.config.ConfigurationLoader
+import com.cjwwdev.http.responses.EvaluateResponse.{ErrorResponse, SuccessResponse}
 import com.cjwwdev.http.responses.WsResponseHelpers
 import com.cjwwdev.http.verbs.Http
 import javax.inject.Inject
@@ -24,8 +25,7 @@ import models.Feature
 import play.api.libs.ws.WSResponse
 import play.api.mvc.Request
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Future, ExecutionContext => ExC}
 
 class DefaultFeatureSwitchConnector @Inject()(config: ConfigurationLoader,
                                               val http: Http) extends FeatureSwitchConnector {
@@ -48,16 +48,18 @@ trait FeatureSwitchConnector extends WsResponseHelpers {
 
   val csrfBypassToken: String
 
-  def getAllFeatureStates(serviceUrl: String)(implicit request: Request[_]): Future[List[Feature]] = {
-    http.get(s"$serviceUrl$getAllFeaturesRoute").map {
-      _.json.as[List[Feature]]
-    }.recover {
-      case _ => List.empty[Feature]
+  def getAllFeatureStates(serviceUrl: String)(implicit request: Request[_], ec: ExC): Future[List[Feature]] = {
+    http.get(s"$serviceUrl$getAllFeaturesRoute") map {
+      case SuccessResponse(resp) => resp.json.as[List[Feature]]
+      case ErrorResponse(_)      => List.empty[Feature]
     }
   }
 
-  def setFeatureState(serviceUrl: String, feature: String, state: Boolean)(implicit request: Request[_]): Future[WSResponse] = {
-    http.postString(s"$serviceUrl${setOneFeatureRoute(feature, state)}", "", secure = false, headers = Seq(bypassHeader))
+  def setFeatureState(serviceUrl: String, feature: String, state: Boolean)(implicit request: Request[_], ec: ExC): Future[WSResponse] = {
+    http.postString(s"$serviceUrl${setOneFeatureRoute(feature, state)}", "", secure = false, headers = Seq(bypassHeader)) map {
+      case SuccessResponse(resp) => resp
+      case ErrorResponse(resp)   => resp
+    }
   }
 
   private val bypassHeader: (String, String) = "Csrf-Bypass" -> csrfBypassToken

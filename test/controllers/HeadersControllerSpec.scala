@@ -18,18 +18,23 @@ package controllers
 
 import connectors.AdminConnector
 import helpers.controllers.ControllerSpec
-import play.api.mvc.ControllerComponents
+import play.api.mvc.{AnyContentAsEmpty, ControllerComponents}
 import play.api.test.Helpers._
 import play.api.test.CSRFTokenHelper._
+import play.api.test.FakeRequest
+
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class HeadersControllerSpec extends ControllerSpec {
 
-  val testController = new HeadersController {
+  private val testController = new HeadersController {
     override val adminConnector: AdminConnector                       = mockAdminConnector
     override protected def controllerComponents: ControllerComponents = stubControllerComponents()
+    override implicit val ec: ExecutionContext                        = global
   }
 
-  lazy val requestWithSession = request.withSession(
+  lazy val requestWithSession: FakeRequest[AnyContentAsEmpty.type] = request.withSession(
     "cookieId" -> generateTestSystemId(MANAGEMENT),
     "username" -> testAccount.username
   )

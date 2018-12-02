@@ -25,13 +25,13 @@ import play.api.mvc._
 import services.FeatureSwitchService
 import views.html.FeatureSwitchView
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class DefaultFeatureSwitchController @Inject()(val controllerComponents: ControllerComponents,
                                                val adminConnector: AdminConnector,
                                                val config: ConfigurationLoader,
-                                               val featureSwitchService: FeatureSwitchService) extends FeatureSwitchController {
+                                               val featureSwitchService: FeatureSwitchService,
+                                               implicit val ec: ExecutionContext) extends FeatureSwitchController {
   override val services: List[String] = config.get[Seq[String]]("microservice.features.services").toList
 }
 
@@ -56,7 +56,7 @@ trait FeatureSwitchController extends FrontendController with Authorisation {
 
   private def processFeaturesForService(serviceName: String)(implicit request: Request[_]): Future[Boolean] = {
     FeatureSwitchForm.form(serviceName).bindFromRequest.fold(
-      _     => Future(false),
+      _     => Future.successful(false),
       valid => featureSwitchService.setFeature(valid._1, valid._2) map(_ => true)
     )
   }

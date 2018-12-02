@@ -22,8 +22,7 @@ import javax.inject.Inject
 import play.api.mvc.Request
 import play.api.http.Status._
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext => ExC, Future}
 
 sealed trait HealthStatus
 case object Healthy  extends HealthStatus
@@ -46,13 +45,13 @@ trait HealthService {
 
   val serviceUrls: Map[String, String]
 
-  def getServicesHealth(implicit request: Request[_]): Future[Map[String, HealthStatus]] = {
+  def getServicesHealth(implicit request: Request[_], ec: ExC): Future[Map[String, HealthStatus]] = {
     Future
       .sequence(serviceUrls.map { case (service, url) => getHealth(service, url) })
       .map(_.toMap)
   }
 
-  private def getHealth(service: String, url: String)(implicit request: Request[_]): Future[(String, HealthStatus)] = {
+  private def getHealth(service: String, url: String)(implicit request: Request[_], ec: ExC): Future[(String, HealthStatus)] = {
     healthConnector.getHealthStatus(url).map {
       service -> matchStatus(_)
     }.recover {

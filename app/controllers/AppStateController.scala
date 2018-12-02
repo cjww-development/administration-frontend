@@ -23,11 +23,12 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import services.HealthService
 import views.html.AppStateView
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 class DefaultAppStateController @Inject()(val controllerComponents: ControllerComponents,
                                           val adminConnector: AdminConnector,
-                                          val healthService: HealthService) extends AppStateController
+                                          val healthService: HealthService,
+                                          implicit val ec: ExecutionContext) extends AppStateController
 
 trait AppStateController extends FrontendController with Authorisation {
 

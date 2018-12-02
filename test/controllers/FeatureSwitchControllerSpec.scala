@@ -19,28 +19,30 @@ package controllers
 import connectors.AdminConnector
 import helpers.controllers.ControllerSpec
 import models.Feature
-import play.api.mvc.ControllerComponents
+import play.api.mvc.{AnyContentAsEmpty, ControllerComponents}
 import services.FeatureSwitchService
 import play.api.test.Helpers._
 import play.api.test.CSRFTokenHelper._
 import org.mockito.Mockito.when
 import org.mockito.ArgumentMatchers.any
+import play.api.test.FakeRequest
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class FeatureSwitchControllerSpec extends ControllerSpec {
 
-  val mockFeatureSwitchService = mock[FeatureSwitchService]
+  private val mockFeatureSwitchService = mock[FeatureSwitchService]
 
-  val testController = new FeatureSwitchController {
+  private val testController = new FeatureSwitchController {
     override val featureSwitchService: FeatureSwitchService           = mockFeatureSwitchService
     override val services: List[String]                               = List("service1", "service2")
     override val adminConnector: AdminConnector                       = mockAdminConnector
     override protected def controllerComponents: ControllerComponents = stubControllerComponents()
+    override implicit val ec: ExecutionContext                        = global
   }
 
-  lazy val requestWithSession = request.withSession(
+  lazy val requestWithSession: FakeRequest[AnyContentAsEmpty.type] = request.withSession(
     "cookieId" -> generateTestSystemId(MANAGEMENT),
     "username" -> testAccount.username
   )
@@ -49,8 +51,8 @@ class FeatureSwitchControllerSpec extends ControllerSpec {
     "return an Ok" in {
       mockGetManagementUser(found = true)
 
-      when(mockFeatureSwitchService.getFeatures(any()))
-        .thenReturn(Future(Map(
+      when(mockFeatureSwitchService.getFeatures(any(), any()))
+        .thenReturn(Future.successful(Map(
           "service1" -> List(Feature(name = "feature", state = false)),
           "service2" -> List()
         )))
@@ -69,8 +71,8 @@ class FeatureSwitchControllerSpec extends ControllerSpec {
         "service1[feature]" -> "true"
       )
 
-      when(mockFeatureSwitchService.setFeature(any(), any())(any()))
-        .thenReturn(Future(List(Feature(name = "feature", state = false))))
+      when(mockFeatureSwitchService.setFeature(any(), any())(any(), any()))
+        .thenReturn(Future.successful(List(Feature(name = "feature", state = false))))
 
       assertResult(testController.submit()(addCSRFToken(req))) { res =>
         status(res)           mustBe SEE_OTHER

@@ -21,6 +21,7 @@ import helpers.services.ServiceSpec
 import play.api.test.FakeRequest
 import org.mockito.Mockito.when
 import org.mockito.ArgumentMatchers.any
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.Helpers._
 
 import scala.concurrent.Future
@@ -28,11 +29,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class HealthServiceSpec extends ServiceSpec {
 
-  val mockHealthConnector = mock[HealthConnector]
+  private val mockHealthConnector = mock[HealthConnector]
 
-  implicit lazy val request = FakeRequest()
+  implicit lazy val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  val testService = new HealthService {
+  private val testService = new HealthService {
     override val healthConnector: HealthConnector = mockHealthConnector
     override val serviceUrls: Map[String, String] = Map(
       "service1" -> "/test/service1",
@@ -43,10 +44,10 @@ class HealthServiceSpec extends ServiceSpec {
   "getServicesHealth" should {
     "return a map of service to health statuses (Healthy)" in {
 
-      when(mockHealthConnector.getHealthStatus(any())(any()))
+      when(mockHealthConnector.getHealthStatus(any())(any(), any()))
         .thenReturn(
-          Future(OK),
-          Future(OK)
+          Future.successful(OK),
+          Future.successful(OK)
         )
 
       awaitAndAssert(testService.getServicesHealth) {
@@ -59,10 +60,10 @@ class HealthServiceSpec extends ServiceSpec {
 
     "return a map of service to health statuses (Unknown)" in {
 
-      when(mockHealthConnector.getHealthStatus(any())(any()))
+      when(mockHealthConnector.getHealthStatus(any())(any(), any()))
         .thenReturn(
-          Future(BAD_REQUEST),
-          Future(FORBIDDEN)
+          Future.successful(BAD_REQUEST),
+          Future.successful(FORBIDDEN)
         )
 
       awaitAndAssert(testService.getServicesHealth) {
@@ -75,10 +76,10 @@ class HealthServiceSpec extends ServiceSpec {
 
     "return a map of service to health statuses (Problems)" in {
 
-      when(mockHealthConnector.getHealthStatus(any())(any()))
+      when(mockHealthConnector.getHealthStatus(any())(any(), any()))
         .thenReturn(
-          Future(INTERNAL_SERVER_ERROR),
-          Future(INTERNAL_SERVER_ERROR)
+          Future.successful(INTERNAL_SERVER_ERROR),
+          Future.successful(INTERNAL_SERVER_ERROR)
         )
 
       awaitAndAssert(testService.getServicesHealth) {

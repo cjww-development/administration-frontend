@@ -17,31 +17,30 @@
 package common
 
 import com.cjwwdev.frontendUI.builders.NavBarLinkBuilder
-import com.cjwwdev.logging.Logging
+import com.cjwwdev.logging.output.Logger
 import connectors.AdminConnector
 import models.AccountDetails
 import play.api.i18n.Lang
 import play.api.mvc._
 import views.html.IncorrectPermissionsView
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-trait Authorisation extends Logging {
+trait Authorisation extends Logger {
   self: BaseController =>
 
   val adminConnector: AdminConnector
 
   private type AuthorisedAction = Request[AnyContent] => AccountDetails => Future[Result]
 
-  protected def isAuthorised(f: => AuthorisedAction): Action[AnyContent] = Action.async { implicit request =>
+  protected def isAuthorised(f: => AuthorisedAction)(implicit ec: ExecutionContext): Action[AnyContent] = Action.async { implicit request =>
     request.session.get("cookieId") match {
       case Some(id) => adminConnector.getManagementUser(id) flatMap { user =>
-        logger.info(s"Authenticated as ${user.managementId} on ${request.path}")
+        LogAt.info(s"[isAuthorised] - Authenticated as ${user.managementId} on ${request.path}")
         f(request)(user)
       }
       case None     =>
-        logger.warn(s"Unauthenticated user attempting to access ${request.path}; redirecting to login")
+        LogAt.warn(s"[isAuthorised] - Unauthenticated user attempting to access ${request.path}; redirecting to login")
         Action(Redirect(controllers.routes.LoginController.login()))(request)
     }
   }
@@ -52,6 +51,6 @@ trait Authorisation extends Logging {
                                                                                                 links: Seq[NavBarLinkBuilder],
                                                                                                 navBarRoutes: Map[String, Call]): Future[Result] = {
     val permissionGranted = (user.permissions intersect routePermissions).nonEmpty
-    if(permissionGranted) f else Future(Forbidden(IncorrectPermissionsView()))
+    if(permissionGranted) f else Future.successful(Forbidden(IncorrectPermissionsView()))
   }
 }

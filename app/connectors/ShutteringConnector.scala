@@ -17,14 +17,14 @@
 package connectors
 
 import com.cjwwdev.config.ConfigurationLoader
+import com.cjwwdev.http.responses.EvaluateResponse.{ErrorResponse, SuccessResponse}
 import com.cjwwdev.http.responses.WsResponseHelpers
 import com.cjwwdev.http.verbs.Http
 import javax.inject.Inject
 import play.api.libs.ws.WSResponse
 import play.api.mvc.Request
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Future, ExecutionContext => ExC}
 
 class DefaultShutteringConnector @Inject()(val config: ConfigurationLoader,
                                            val http: Http) extends ShutteringConnector {
@@ -36,15 +36,17 @@ trait ShutteringConnector extends WsResponseHelpers {
 
   val shutterRoute: String
 
-  def shutterService(serviceUrl: String, shutter: Boolean)(implicit request: Request[_]): Future[WSResponse] = {
-    http.patchString(s"$serviceUrl$shutterRoute/$shutter", "")
+  def shutterService(serviceUrl: String, shutter: Boolean)(implicit request: Request[_], ec: ExC): Future[WSResponse] = {
+    http.patchString(s"$serviceUrl$shutterRoute/$shutter", "") map {
+      case SuccessResponse(resp) => resp
+      case ErrorResponse(resp)   => resp
+    }
   }
 
-  def getShutterState(serviceUrl: String)(implicit request: Request[_]): Future[Boolean] = {
-    http.get(s"$serviceUrl$shutterRoute/state").map {
-      _.toResponseString(needsDecrypt = false).toBoolean
-    }.recover {
-      case _ => true
+  def getShutterState(serviceUrl: String)(implicit request: Request[_], ec: ExC): Future[Boolean] = {
+    http.get(s"$serviceUrl$shutterRoute/state") map {
+      case SuccessResponse(resp) => resp.toResponseString(needsDecrypt = false).fold(_.toBoolean, _ => true)
+      case ErrorResponse(_)      => true
     }
   }
 }

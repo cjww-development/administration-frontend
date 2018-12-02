@@ -40,12 +40,12 @@ trait MockShutteringService extends BeforeAndAfterEach with MockitoSugar with Fi
   }
 
   def mockShutterService: OngoingStubbing[Future[Map[String, Boolean]]] = {
-    when(mockShutteringService.shutterServices(any())(any()))
-      .thenReturn(Future(Map("testService" -> true)))
+    when(mockShutteringService.shutterServices(any())(any(), any()))
+      .thenReturn(Future.successful(Map("testService" -> true)))
   }
 
   def mockGetShutterStates: OngoingStubbing[Future[Map[String, Boolean]]] = {
-    when(mockShutteringService.getShutterStates(any()))
-      .thenReturn(Future(Map("testService" -> true)))
+    when(mockShutteringService.getShutterStates(any(), any()))
+      .thenReturn(Future.successful(Map("testService" -> true)))
   }
 }

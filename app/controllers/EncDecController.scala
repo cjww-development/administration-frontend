@@ -26,38 +26,38 @@ import javax.inject.Inject
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import views.html.{DataSecurityView, EncDecOptionsView, SHA512View}
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 class DefaultEncDecController @Inject()(val adminConnector: AdminConnector,
-                                        val controllerComponents: ControllerComponents) extends EncDecController
+                                        val controllerComponents: ControllerComponents,
+                                        implicit val ec: ExecutionContext) extends EncDecController
 
 trait EncDecController extends FrontendController with Authorisation {
 
   def showEncDecOptions(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
     permissionsGuard(Permissions.encDec) {
-      Future(Ok(EncDecOptionsView()))
+      Future.successful(Ok(EncDecOptionsView()))
     }
   }
 
   def showSHA512(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
     permissionsGuard(Permissions.encDec) {
-      Future(Ok(SHA512View(SHA512Form.form)))
+      Future.successful(Ok(SHA512View(SHA512Form.form)))
     }
   }
 
   def submitSHA512(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
     permissionsGuard(Permissions.encDec) {
       SHA512Form.form.bindFromRequest.fold(
-        errors => Future(BadRequest(SHA512View(errors))),
-        string => Future(Ok(SHA512View(SHA512Form.form.fill(string.sha512), finished = true)))
+        errors => Future.successful(BadRequest(SHA512View(errors))),
+        string => Future.successful(Ok(SHA512View(SHA512Form.form.fill(string.sha512), finished = true)))
       )
     }
   }
 
   def showDataSecurity(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
     permissionsGuard(Permissions.encDec) {
-      Future(Ok(DataSecurityView(DataSecurityForm.form)))
+      Future.successful(Ok(DataSecurityView(DataSecurityForm.form)))
     }
   }
 
@@ -71,7 +71,7 @@ trait EncDecController extends FrontendController with Authorisation {
             case "enc" => data.encrypt
             case "dec" => data.decrypt[String].fold(identity, _.message)
           }
-          Future(Ok(DataSecurityView(DataSecurityForm.form.fill(processedData, mode), finished = true)))
+          Future.successful(Ok(DataSecurityView(DataSecurityForm.form.fill(processedData, mode), finished = true)))
         }
       )
     }

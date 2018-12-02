@@ -19,22 +19,26 @@ package controllers
 import com.cjwwdev.http.headers.HeaderPackage
 import connectors.AdminConnector
 import helpers.controllers.ControllerSpec
-import play.api.mvc.{AnyContentAsFormUrlEncoded, ControllerComponents}
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded, ControllerComponents}
 import com.cjwwdev.implicits.ImplicitDataSecurity._
 import play.api.test.CSRFTokenHelper.addCSRFToken
 import play.api.test.FakeRequest
 import services.ShutteringService
 import play.api.test.Helpers._
 
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.Implicits.global
+
 class ShutteringControllerSpec extends ControllerSpec {
 
-  val testController = new ShutteringController {
+  private val testController = new ShutteringController {
     override val shutteringService: ShutteringService                 = mockShutteringService
     override protected def controllerComponents: ControllerComponents = stubControllerComponents()
     override val adminConnector: AdminConnector                       = mockAdminConnector
+    override implicit val ec: ExecutionContext                        = global
   }
 
-  lazy val requestWithSession = request.withSession(
+  lazy val requestWithSession: FakeRequest[AnyContentAsEmpty.type] = request.withSession(
     "cookieId" -> generateTestSystemId(MANAGEMENT),
     "username" -> testAccount.username
   )

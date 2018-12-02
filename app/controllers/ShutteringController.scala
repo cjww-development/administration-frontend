@@ -26,12 +26,12 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import services.ShutteringService
 import views.html.ShutteringView
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class DefaultShutteringController @Inject()(val controllerComponents: ControllerComponents,
                                             val adminConnector: AdminConnector,
-                                            val shutteringService: ShutteringService) extends ShutteringController
+                                            val shutteringService: ShutteringService,
+                                            implicit val ec: ExecutionContext) extends ShutteringController
 
 trait ShutteringController extends FrontendController with Authorisation {
 

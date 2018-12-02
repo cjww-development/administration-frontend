@@ -16,19 +16,17 @@
 
 package connectors
 
-import com.cjwwdev.http.exceptions.{ForbiddenException, ServerErrorException}
-import com.cjwwdev.security.obfuscation.Obfuscation._
-import com.cjwwdev.implicits.ImplicitDataSecurity._
 import com.cjwwdev.http.verbs.Http
+import com.cjwwdev.implicits.ImplicitDataSecurity._
+import com.cjwwdev.security.obfuscation.Obfuscation._
 import helpers.connectors.ConnectorSpec
 import models.AccountDetails
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class AdminConnectorSpec extends ConnectorSpec {
 
-  val testConnector = new AdminConnector {
+  private val testConnector = new AdminConnector {
     override val http: Http       = mockHttp
     override val adminUrl: String = "/test/url"
   }
@@ -36,7 +34,7 @@ class AdminConnectorSpec extends ConnectorSpec {
   "registerNewUser" should {
     "return true" when {
       "the user has been registered" in {
-        mockHttpPost(response = Future(fakeHttpResponse(statusCode = OK)))
+        mockHttpPost(response = fakeHttpResponse(statusCode = OK))
 
         awaitAndAssert(testConnector.registerNewUser(registration = testRegistration)) { registered =>
           assert(registered)
@@ -46,7 +44,7 @@ class AdminConnectorSpec extends ConnectorSpec {
 
     "return false" when {
       "the user has not been registered" in {
-        mockHttpPost(response = Future.failed(new ServerErrorException("", INTERNAL_SERVER_ERROR)))
+        mockHttpPost(response = fakeHttpResponse(statusCode = INTERNAL_SERVER_ERROR))
 
         awaitAndAssert(testConnector.registerNewUser(registration = testRegistration)) { registered =>
           assert(!registered)
@@ -58,7 +56,7 @@ class AdminConnectorSpec extends ConnectorSpec {
   "authenticateUser" should {
     "return a managementId" when {
       "the user has been authenticated" in {
-        mockHttpPost(response = Future(fakeHttpResponse(statusCode = OK, bodyContents = generateTestSystemId(MANAGEMENT).encrypt)))
+        mockHttpPost(response = fakeHttpResponse(statusCode = OK, bodyContents = generateTestSystemId(MANAGEMENT).encrypt))
 
         awaitAndAssert(testConnector.authenticateUser(credentials = testCreds)) {
           _ mustBe Some(generateTestSystemId(MANAGEMENT))
@@ -68,7 +66,7 @@ class AdminConnectorSpec extends ConnectorSpec {
 
     "return none" when {
       "the user could not be authenticated" in {
-        mockHttpPost(response = Future(fakeHttpResponse(statusCode = FORBIDDEN)))
+        mockHttpPost(response = fakeHttpResponse(statusCode = FORBIDDEN))
 
         awaitAndAssert(testConnector.authenticateUser(credentials = testCreds)) {
           _ mustBe None
@@ -76,7 +74,7 @@ class AdminConnectorSpec extends ConnectorSpec {
       }
 
       "a Forbidden exception was thrown" in {
-        mockHttpPost(response = Future.failed(new ForbiddenException("")))
+        mockHttpPost(response = fakeHttpResponse(statusCode = FORBIDDEN))
 
         awaitAndAssert(testConnector.authenticateUser(credentials = testCreds)) {
           _ mustBe None
@@ -87,7 +85,7 @@ class AdminConnectorSpec extends ConnectorSpec {
 
   "getManagementUser" should {
     "return an account details" in {
-      mockHttpGet(response = Future(fakeHttpResponse(statusCode = OK, bodyContents = testAccountDetails.encrypt)))
+      mockHttpGet(response = fakeHttpResponse(statusCode = OK, bodyContents = testAccountDetails.encrypt))
 
       awaitAndAssert(testConnector.getManagementUser(managementId = generateTestSystemId(MANAGEMENT))) {
         _ mustBe testAccountDetails
@@ -97,7 +95,7 @@ class AdminConnectorSpec extends ConnectorSpec {
 
   "getAllManagementUsers" should {
     "a populated list" in {
-      mockHttpGet(response = Future(fakeHttpResponse(statusCode = OK, bodyContents = List(testAccountDetails).encrypt)))
+      mockHttpGet(response = fakeHttpResponse(statusCode = OK, bodyContents = List(testAccountDetails).encrypt))
 
       awaitAndAssert(testConnector.getAllManagementUsers) { res =>
         assert(res.nonEmpty)
@@ -106,7 +104,7 @@ class AdminConnectorSpec extends ConnectorSpec {
     }
 
     "an empty list" in {
-      mockHttpGet(response = Future(fakeHttpResponse(statusCode = NO_CONTENT)))
+      mockHttpGet(response = fakeHttpResponse(statusCode = NO_CONTENT))
 
       awaitAndAssert(testConnector.getAllManagementUsers) { res =>
         assert(res.isEmpty)
@@ -117,7 +115,7 @@ class AdminConnectorSpec extends ConnectorSpec {
 
   "deleteManagementUser" should {
     "return true" in {
-      mockHttpDelete(response = Future(fakeHttpResponse(statusCode = NO_CONTENT)))
+      mockHttpDelete(response = fakeHttpResponse(statusCode = NO_CONTENT))
 
       awaitAndAssert(testConnector.deleteManagementUser(generateTestSystemId(MANAGEMENT))) { bool =>
         assert(bool)
@@ -125,7 +123,7 @@ class AdminConnectorSpec extends ConnectorSpec {
     }
 
     "return false" in {
-      mockHttpDelete(response = Future.failed(new ServerErrorException("", INTERNAL_SERVER_ERROR)))
+      mockHttpDelete(response = fakeHttpResponse(statusCode = INTERNAL_SERVER_ERROR))
 
       awaitAndAssert(testConnector.deleteManagementUser(generateTestSystemId(MANAGEMENT))) { bool =>
         assert(!bool)

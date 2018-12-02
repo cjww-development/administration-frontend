@@ -40,7 +40,7 @@ trait MockLoginService extends BeforeAndAfterEach with MockitoSugar with Fixture
   }
 
   def mockProcessLogin(authenticated: Boolean): OngoingStubbing[Future[Option[Session]]] = {
-    when(mockLoginService.processLoginAttempt(ArgumentMatchers.any())(ArgumentMatchers.any()))
-      .thenReturn(Future(if(authenticated) Some(testSession) else None))
+    when(mockLoginService.processLoginAttempt(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+      .thenReturn(Future.successful(if(authenticated) Some(testSession) else None))
   }
 }

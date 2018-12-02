@@ -25,11 +25,15 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.LoginService
 
+import scala.concurrent.ExecutionContext
+import scala.concurrent.ExecutionContext.Implicits.global
+
 class LoginControllerSpec extends ControllerSpec {
 
-  val testController = new LoginController {
+  private val testController = new LoginController {
     override val loginService: LoginService                           = mockLoginService
     override protected def controllerComponents: ControllerComponents = stubControllerComponents()
+    override implicit val ec: ExecutionContext                        = global
   }
 
   "login" should {
