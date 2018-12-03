@@ -27,7 +27,7 @@ private object CompileDependencies {
   private val frontendUIVersion    = "2.8.2"
   private val httpVerbsVersion     = "3.5.1"
   private val serviceHealthVersion = "0.3.1"
-  private val loggingUtilsVersion  = "1.2.6"
+  private val loggingUtilsVersion  = "1.2.7"
 
   private val playImports: Seq[ModuleID] = Seq(filters, guice)
 
