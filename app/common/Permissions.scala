@@ -22,6 +22,7 @@ import play.twirl.api.Html
 object Permissions {
   val rootOnly      = List("all")
   val encDec        = rootOnly ++ List("encdec")
+  val encDecCustom  = rootOnly ++ List("edc")
   val headers       = rootOnly ++ List("headers")
   val shuttering    = rootOnly ++ List("shuttering")
   val featureSwitch = rootOnly ++ List("featureSwitching")

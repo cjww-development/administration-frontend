@@ -21,18 +21,23 @@ import com.cjwwdev.security.obfuscation.Obfuscation._
 import com.cjwwdev.security.deobfuscation.DeObfuscation._
 import common.{Authorisation, FrontendController, Permissions}
 import connectors.AdminConnector
-import forms.{DataSecurityForm, SHA512Form}
+import forms.{CustomDataSecurityForm, DataSecurityForm, SHA512Form}
 import javax.inject.Inject
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import views.html.{DataSecurityView, EncDecOptionsView, SHA512View}
+import services.EncDecService
+import views.html.{DataSecurityCustomView, DataSecurityView, EncDecOptionsView, SHA512View}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class DefaultEncDecController @Inject()(val adminConnector: AdminConnector,
                                         val controllerComponents: ControllerComponents,
+                                        val encDecService: EncDecService,
                                         implicit val ec: ExecutionContext) extends EncDecController
 
 trait EncDecController extends FrontendController with Authorisation {
+
+  val encDecService: EncDecService
 
   def showEncDecOptions(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
     permissionsGuard(Permissions.encDec) {
@@ -64,7 +69,7 @@ trait EncDecController extends FrontendController with Authorisation {
   def submitDataSecurity(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
     permissionsGuard(Permissions.encDec) {
       DataSecurityForm.form.bindFromRequest.fold(
-        errors => Future(BadRequest(DataSecurityView(errors))),
+        errors => Future.successful(BadRequest(DataSecurityView(errors))),
         form   => {
           val (data, mode) = form
           val processedData = mode match {
@@ -72,6 +77,31 @@ trait EncDecController extends FrontendController with Authorisation {
             case "dec" => data.decrypt[String].fold(identity, _.message)
           }
           Future.successful(Ok(DataSecurityView(DataSecurityForm.form.fill(processedData, mode), finished = true)))
+        }
+      )
+    }
+  }
+
+  def showCustomDataSecurity(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
+    permissionsGuard(Permissions.rootOnly) {
+      Future.successful(Ok(DataSecurityCustomView(CustomDataSecurityForm.form)))
+    }
+  }
+
+  def submitCustomDataSecurity(): Action[AnyContent] = isAuthorised { implicit request => implicit user =>
+    permissionsGuard(Permissions.rootOnly) {
+      CustomDataSecurityForm.form.bindFromRequest.fold(
+        errors => Future.successful(BadRequest(DataSecurityCustomView(errors))),
+        form   => {
+          val (mode, salt, key, data) = form
+          val processedData = mode match {
+            case "enc" => encDecService.encrypt(Json.toJson(data), salt, key)
+            case "dec" => encDecService.decrypt[String](data, salt, key).fold(identity, _.message)
+          }
+          Future.successful(Ok(DataSecurityCustomView(
+            CustomDataSecurityForm.form.fill(mode, salt, key, processedData),
+            finished = true
+          )))
         }
       )
     }

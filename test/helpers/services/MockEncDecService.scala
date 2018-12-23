@@ -16,30 +16,33 @@
 
 package helpers.services
 
+import com.cjwwdev.security.deobfuscation.DecryptionError
 import helpers.other.Fixtures
-import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
-import play.api.mvc.Session
-import services.LoginService
+import services.EncDecService
 
-import scala.concurrent.Future
-
-trait MockLoginService extends BeforeAndAfterEach with MockitoSugar with Fixtures {
+trait MockEncDecService extends BeforeAndAfterEach with MockitoSugar with Fixtures {
   self: PlaySpec =>
 
-  val mockLoginService: LoginService = mock[LoginService]
+  val mockEncDecService: EncDecService = mock[EncDecService]
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockLoginService)
+    reset(mockEncDecService)
   }
 
-  def mockProcessLogin(authenticated: Boolean): OngoingStubbing[Future[Option[Session]]] = {
-    when(mockLoginService.processLoginAttempt(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
-      .thenReturn(Future.successful(if(authenticated) Some(testSession) else None))
+  def mockEncrypt(value: String): OngoingStubbing[String] = {
+    when(mockEncDecService.encrypt(any(), any(), any()))
+      .thenReturn(value)
+  }
+
+  def mockDecrypt[T](value: T): OngoingStubbing[Either[T, DecryptionError]] = {
+    when(mockEncDecService.decrypt[T](any(), any(), any())(any(), any()))
+      .thenReturn(Left(value))
   }
 }
