@@ -29,6 +29,7 @@ components.quick-links.dash                         =Dashboard
 components.quick-links.register                     =Register user
 components.quick-links.view-users                   =View users
 components.quick-links.enc-dec                      =Encrypt and decrypt
+components.quick-links.custom-enc-dec               =Custom encrypt and decrypt
 components.quick-links.headers                      =Generate headers
 components.quick-links.enc-dec.sha                  =SHA512
 components.quick-links.enc-dec.ds                   =Data security
@@ -90,6 +91,16 @@ pages.ds.title                                      =Encrypt or decrypt using da
 pages.ds.heading                                    =Encrypt or decrypt using data security
 pages.ds.mode-select                                =Do you want to encrypt or decrypt the data?
 pages.ds.data-type                                  =Are you processing a string or json?
+
+pages.customDS.title                                =Encrypt or decrypt using custom salt and key
+pages.customDS.heading                              =Encrypt or decrypt using custom salt and key
+pages.customDS.mode-select                          =Do you want to encrypt or decrypt the data?
+pages.customDS.form.salt.label                      =Salt
+pages.customDS.form.salt.placeholder                =Value to use as the salt for encryption and decryption
+pages.customDS.form.key.label                       =Key
+pages.customDS.form.key.placeholder                 =Value to use as the key for encryption and decryption
+pages.customDS.form.data.label                      =Data
+pages.customDS.form.data.placeholder                =Value to encrypt
 
 pages.headers.title                                 =Generate headers
 pages.headers.heading                               =Generate headers

@@ -24,6 +24,7 @@ import play.api.mvc.{AnyContentAsEmpty, ControllerComponents}
 import play.api.test.Helpers._
 import play.api.test.CSRFTokenHelper._
 import play.api.test.FakeRequest
+import services.EncDecService
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -31,6 +32,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class EncDecControllerSpec extends ControllerSpec {
 
   private val testController = new EncDecController {
+    override val encDecService: EncDecService                         = mockEncDecService
     override val adminConnector: AdminConnector                       = mockAdminConnector
     override protected def controllerComponents: ControllerComponents = stubControllerComponents()
     override implicit val ec: ExecutionContext                        = global
@@ -167,6 +169,86 @@ class EncDecControllerSpec extends ControllerSpec {
         assertResult(testController.submitDataSecurity()(addCSRFToken(req))) { res =>
           status(res) mustBe OK
         }
+      }
+    }
+  }
+
+  "showCustomDataSecurity" should {
+    "return an Ok" in {
+      mockGetManagementUser(found = true)
+
+      assertResult(testController.showCustomDataSecurity()(addCSRFToken(requestWithSession))) { res =>
+        status(res) mustBe OK
+      }
+    }
+  }
+
+  "submitCustomDataSecurity" should {
+    "data type is string and mode is enc" in {
+      val req = requestWithSession.withFormUrlEncodedBody(
+        "data" -> "test",
+        "salt" -> "testSalt",
+        "key"  -> "testKey",
+        "mode" -> "enc"
+      )
+
+      mockGetManagementUser(found = true)
+
+      mockEncrypt(value = "test".encrypt)
+
+      assertResult(testController.submitCustomDataSecurity()(addCSRFToken(req))) { res =>
+        status(res) mustBe OK
+      }
+    }
+
+    "data type is string and mode is dec" in {
+      val req = requestWithSession.withFormUrlEncodedBody(
+        "data" -> "test".encrypt,
+        "salt" -> "testSalt",
+        "key"  -> "testKey",
+        "mode" -> "dec"
+      )
+
+      mockGetManagementUser(found = true)
+
+      mockDecrypt(value = "test")
+
+      assertResult(testController.submitCustomDataSecurity()(addCSRFToken(req))) { res =>
+        status(res) mustBe OK
+      }
+    }
+
+    "data type is json and mode is enc" in {
+      val req = requestWithSession.withFormUrlEncodedBody(
+        "data" -> """{ "abc" : "xyz" }""",
+        "salt" -> "testSalt",
+        "key"  -> "testKey",
+        "mode" -> "enc"
+      )
+
+      mockGetManagementUser(found = true)
+
+      mockEncrypt(value = """{ "abc" : "xyz" }""".encrypt)
+
+      assertResult(testController.submitCustomDataSecurity()(addCSRFToken(req))) { res =>
+        status(res) mustBe OK
+      }
+    }
+
+    "data type is json and mode is dec" in {
+      val req = requestWithSession.withFormUrlEncodedBody(
+        "data" -> """{ "abc" : "xyz" }""".encrypt,
+        "salt" -> "testSalt",
+        "key"  -> "testKey",
+        "mode" -> "dec"
+      )
+
+      mockGetManagementUser(found = true)
+
+      mockDecrypt(value = """{ "abc" : "xyz" }""")
+
+      assertResult(testController.submitCustomDataSecurity()(addCSRFToken(req))) { res =>
+        status(res) mustBe OK
       }
     }
   }

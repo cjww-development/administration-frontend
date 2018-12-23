@@ -24,12 +24,17 @@ import common.Permissions._
 
 object ThumbNails {
   def thumbnailList()(implicit user: AccountDetails, messages: MessagesApi, lang: Lang): List[List[Html]] = {
-    val rootThumbs: List[Html]          = if(permissionGranted(rootOnly)) List(RegisterThumbnail(), UsersOverviewThumbnail()) else List()
+    val rootThumbs: List[Html]          = if(permissionGranted(rootOnly)) {
+      List(RegisterThumbnail(), UsersOverviewThumbnail(), CustomDataSecurityThumbnail())
+    } else {
+      List()
+    }
+
     val encDecThumbs: List[Html]        = if(permissionGranted(encDec)) List(DataSecurityThumbnail(), SHA512Thumbnail()) else List()
     val headerThumbs: List[Html]        = if(permissionGranted(headers)) List(HeadersThumbnail()) else List()
     val shutteringThumbs: List[Html]    = if(permissionGranted(shuttering)) List(ShutteringThumbnail()) else List()
     val featureSwitchThumbs: List[Html] = if(permissionGranted(featureSwitch)) List(FeatureSwitchThumbnail()) else List()
-    val general: List[Html]             = List(UUIDThumbnail())
+    val general: List[Html]             = List(UUIDThumbnail(), ServiceHealthThumbnail())
     (rootThumbs ++ encDecThumbs ++ headerThumbs ++ shutteringThumbs ++ featureSwitchThumbs ++ general).grouped(4).toList
   }
 }

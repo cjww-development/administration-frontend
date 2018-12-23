@@ -19,6 +19,8 @@ GET     /encrypt-using-sha-512             controllers.EncDecController.showSHA5
 POST    /encrypt-using-sha-512             controllers.EncDecController.submitSHA512()
 GET     /encrypt-decrypt-using-data-sec    controllers.EncDecController.showDataSecurity()
 POST    /encrypt-decrypt-using-data-sec    controllers.EncDecController.submitDataSecurity()
+GET     /custom-encrypt-decrypt            controllers.EncDecController.showCustomDataSecurity()
+POST    /custom-encrypt-decrypt            controllers.EncDecController.submitCustomDataSecurity()
 
 GET     /generate-headers                  controllers.HeadersController.headers()
 POST    /generate-headers                  controllers.HeadersController.headersSubmit()

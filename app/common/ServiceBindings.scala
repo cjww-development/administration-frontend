@@ -46,7 +46,8 @@ class ServiceBindings extends Module {
     bind(classOf[LoginService]).to(classOf[DefaultLoginService]).eagerly(),
     bind(classOf[ShutteringService]).to(classOf[DefaultShutteringService]).eagerly(),
     bind(classOf[FeatureSwitchService]).to(classOf[DefaultFeatureSwitchService]).eagerly(),
-    bind(classOf[HealthService]).to(classOf[DefaultHealthService]).eagerly()
+    bind(classOf[HealthService]).to(classOf[DefaultHealthService]).eagerly(),
+    bind(classOf[EncDecService]).to(classOf[DefaultEncDecService]).eagerly()
   )
 
   private def bindControllers(): Seq[Binding[_]] = Seq(
