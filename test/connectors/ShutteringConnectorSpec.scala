@@ -62,5 +62,13 @@ class ShutteringConnectorSpec extends ConnectorSpec {
         _ mustBe false
       }
     }
+
+    "return true if there was a problem" in {
+      mockHttpGet(response = fakeHttpResponse(statusCode = INTERNAL_SERVER_ERROR), error = true)
+
+      awaitAndAssert(testConnector.getShutterState("testService")) {
+        _ mustBe true
+      }
+    }
   }
 }

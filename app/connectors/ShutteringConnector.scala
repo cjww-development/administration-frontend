@@ -47,6 +47,8 @@ trait ShutteringConnector extends WsResponseHelpers {
     http.get(s"$serviceUrl$shutterRoute/state") map {
       case SuccessResponse(resp) => resp.toResponseString(needsDecrypt = false).fold(_.toBoolean, _ => true)
       case ErrorResponse(_)      => true
+    } recover {
+      case _ => true
     }
   }
 }
