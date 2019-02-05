@@ -33,7 +33,7 @@ class DefaultHealthService @Inject()(val healthConnector: HealthConnector,
                                      val config: ConfigurationLoader) extends HealthService {
   override val serviceUrls: Map[String, String] = {
     config
-      .get[Seq[String]]("microservice.features.services")
+      .get[Seq[String]]("microservice.health.services")
       .map(service => service -> config.getServiceUrl(service))
       .toMap
   }

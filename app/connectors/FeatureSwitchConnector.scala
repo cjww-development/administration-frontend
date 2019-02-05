@@ -52,6 +52,8 @@ trait FeatureSwitchConnector extends WsResponseHelpers {
     http.get(s"$serviceUrl$getAllFeaturesRoute") map {
       case SuccessResponse(resp) => resp.json.as[List[Feature]]
       case ErrorResponse(_)      => List.empty[Feature]
+    } recover {
+      case _ => List.empty[Feature]
     }
   }
 
