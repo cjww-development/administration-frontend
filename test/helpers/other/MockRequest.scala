@@ -42,6 +42,26 @@ trait MockRequest extends ApiResponse {
     override def status: Int                            = statusCode
   }
 
+  def fakeHttpResponseWithPadding(statusCode: Int, bodyContents: JsValue): WSResponse = new WSResponse {
+    override def headers: Map[String, Seq[String]]      = ???
+    override def bodyAsSource: Source[ByteString, _]    = ???
+    override def cookie(name: String): Option[WSCookie] = ???
+    override def underlying[T]: T                       = ???
+    override def body: String                           = ???
+    override def bodyAsBytes: ByteString                = ???
+    override def cookies: Seq[WSCookie]                 = ???
+    override def allHeaders: Map[String, Seq[String]]   = ???
+    override def xml: Elem                              = ???
+    override def statusText: String                     = ???
+    override def json: JsValue                          = {
+      requestProperties(statusCode) ++
+        Json.obj(bodyKey(statusCode) -> bodyContents) ++
+        requestStats
+    }
+    override def header(key: String): Option[String]    = ???
+    override def status: Int                            = statusCode
+  }
+
   def fakeHttpResponse(statusCode: Int, bodyContents: String = ""): WSResponse = new WSResponse {
     override def headers: Map[String, Seq[String]]      = ???
     override def bodyAsSource: Source[ByteString, _]    = ???

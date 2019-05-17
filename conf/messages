@@ -24,6 +24,8 @@ app.common.enc-or-dec                               =Process
 app.common.generate                                 =Generate
 app.common.shutter                                  =Shutter
 app.common.toggle                                   =Toggle
+app.common.search                                   =Search
+app.common.close                                    =Close
 
 components.quick-links.dash                         =Dashboard
 components.quick-links.register                     =Register user
@@ -37,6 +39,7 @@ components.quick-links.uuid                         =Generate UUID
 components.quick-links.shuttering                   =Service Shuttering
 components.quick-links.feature-switch               =Feature switching
 components.quick-links.service-health               =Service health
+components.quick-links.event-store                  =User event log
 
 pages.incorrect-permissions.title                   =You are not allowed here
 pages.incorrect-permissions.heading                 =Woah
@@ -122,4 +125,45 @@ pages.feature-switch.no-features                    =This service doesn''t have 
 
 pages.service-health.title                          =Service health
 pages.service-health.heading                        =Service health
+
+pages.user-event-log.title                          =User event log
+pages.user-event-log.heading                        =Event log for user {0}
+pages.user-event-log.btn.search                     =Search
+pages.user-event-log.no-events                      =Search for events using the search button above
+pages.user-event.event.100                          =Individual Registration
+pages.user-event.event.101                          =Organisation Registration
+pages.user-event.event.102                          =Teacher Enrolment
+pages.user-event.event.103                          =Student Enrolment
+pages.user-event.event.200                          =Individual Basic Details Update
+pages.user-event.event.201                          =Organisation Basic Details Update
+pages.user-event.event.202                          =Individual Password Update
+pages.user-event.event.203                          =Organisation Password Update
+pages.user-event.event.204                          =Individual Settings Update
+pages.user-event.event.205                          =Organisation Settings Update
+pages.user-event.event.300                          =Individual Login
+pages.user-event.event.301                          =Organisation Login
+pages.user-event.event.400                          =Teacher Registration Code Generation
+pages.user-event.event.401                          =Organisation Registration Code Generation
+pages.user-event.event.402                          =Classroom Creation
+pages.user-event.event.403                          =Student Classroom Invitation
+pages.user-event.form.heading                       =Search event logs
+pages.user-event.form.userName.label                =User name
+pages.user-event.form.userName.placeholder          =The user name of the user you''re querying for
+pages.user-event.form.start.label                   =Start Date
+pages.user-event.form.start.placeholder             =Enter the start date in the format yyyy-mm-dd
+pages.user-event.form.end.label                     =End Date
+pages.user-event.form.end.placeholder               =Enter the end date in the format yyyy-mm-dd
+pages.user-event.form.service.label                 =Service
+pages.user-event.form.service.placeholder           =Name of the service you want events from
+pages.user-event.form.sessionId.label               =Session Id
+pages.user-event.form.sessionId.placeholder         =Get events from a specific user session
+pages.user-event.form.requestId.label               =Request Id
+pages.user-event.form.requestId.placeholder         =Get events from a specific request chain
+pages.user-event.form.deviceId.label                =Device Id
+pages.user-event.form.deviceId.placeholder          =Get events generated from a specific device
+pages.user-event.form.ipAddress.label               =IP Address
+pages.user-event.form.ipAddress.placeholder         =Get events generated from a specific IP
+pages.user-event.form.eventCodes.label              =Event codes
+pages.user-event.form.eventCodes.placeholder        =Get specific user events
+
 

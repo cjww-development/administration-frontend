@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 CJWW Development
+ * Copyright 2019 CJWW Development
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,8 @@ trait FeatureSwitchConnector extends WsResponseHelpers {
     http.get(s"$serviceUrl$getAllFeaturesRoute") map {
       case SuccessResponse(resp) => resp.json.as[List[Feature]]
       case ErrorResponse(_)      => List.empty[Feature]
+    } recover {
+      case _ => List.empty[Feature]
     }
   }
 

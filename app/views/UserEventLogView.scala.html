@@ -1,0 +1,226 @@
+@import com.cjwwdev.frontendUI.builders.NavBarLinkBuilder
+@import com.cjwwdev.views.html.templates.AdminMainTemplate
+@import com.cjwwdev.views.html.helpers.{errorPanel, textInput}
+@import com.cjwwdev.implicits.ImplicitJsValues._
+@import helper._
+@import views.html.components.QuickLinks
+@import common.Permissions._
+@import common.ThumbNails
+@import play.api.libs.json.JsValue
+@import play.api.libs.json.Json
+
+@import services.HealthStatus
+@import services.Healthy
+@import services.Unknown
+@import services.Problems
+
+@(userName: String, events: List[JsValue], form: Form[EventFiltering])(implicit request: Request[_], user: AccountDetails, messages: MessagesApi, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call])
+
+@AdminMainTemplate(title = messages("pages.user-event-log.title"), links, navBarRoutes){
+    <div class="top-block-single">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="page-header">
+                        <h2 id="quick-links" class="pageTitle">@messages("pages.dashboard.quick-links.heading")</h2>
+                    </div>
+
+                    @QuickLinks()
+                </div>
+
+                <div class="col-md-9">
+                    <div class="page-header">
+                        <h2 id="main-heading" class="pageTitle">
+                            @{if(events.nonEmpty) { messages("pages.user-event-log.heading", userName) } else { messages("pages.user-event.form.heading") }}
+                        </h2>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#filtering">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> @messages("pages.user-event-log.btn.search")
+                    </button>
+                    @filteringModal()
+
+                    <hr>
+
+                    @if(events.nonEmpty) {
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <td>Timestamp</td>
+                                <td>Event</td>
+                                <td>Event Description</td>
+                                <td></td>
+                            </thead>
+
+                            @for((event, index) <- events.zipWithIndex) {
+                                <tr>
+                                    <td>@{event.get[String]("createdAt")}</td>
+                                    <td>@{event.get[Int]("eventCode")}</td>
+                                    <td>@messages(s"pages.user-event.event.${event.get[Int]("eventCode")}")</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#eventIndex@{index}">
+                                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> View
+                                        </button>
+
+                                        @eventModalBuilder(event, index)
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    } else {
+                        <p class="text-center">@messages("pages.user-event-log.no-events")</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@eventModalBuilder(event: JsValue, index: Int) = {
+    <!-- Modal -->
+    <div class="modal fade" id="eventIndex@{index}" tabindex="-1" role="dialog" aria-labelledby="eventIndex@{index}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">@messages(s"pages.user-event.event.${event.get[Int]("eventCode")}")</h4>
+                </div>
+                <div class="modal-body">
+                    <pre>@{Json.prettyPrint(event)}</pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@filteringModal() = {
+    <div class="modal fade" id="filtering" tabindex="-1" role="dialog" aria-labelledby="filtering">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">@messages("pages.user-event.form.heading")</h4>
+                </div>
+                <form action="@routes.UserEventLogController.submit()" method="post">
+                    @CSRF.formField
+
+                    <div class="modal-body">
+                        @textInput(
+                            form("userName"),
+                            false,
+                            '_sassClass   -> "cjww-input-group-addon",
+                            '_label       -> messages("pages.user-event.form.userName.label"),
+                            '_inputType   -> "text",
+                            '_placeholder -> messages("pages.user-event.form.userName.placeholder"),
+                            '_fieldName   -> "userName",
+                            '_spanId      -> "userName-span"
+                        )
+
+                        @textInput(
+                            form("start"),
+                            false,
+                            '_sassClass   -> "cjww-input-group-addon",
+                            '_label       -> messages("pages.user-event.form.start.label"),
+                            '_inputType   -> "text",
+                            '_placeholder -> messages("pages.user-event.form.start.placeholder"),
+                            '_fieldName   -> "start",
+                            '_spanId      -> "start-span"
+                        )
+
+                        @textInput(
+                            form("end"),
+                            false,
+                            '_sassClass   -> "cjww-input-group-addon",
+                            '_label       -> messages("pages.user-event.form.end.label"),
+                            '_inputType   -> "text",
+                            '_placeholder -> messages("pages.user-event.form.end.placeholder"),
+                            '_fieldName   -> "end",
+                            '_spanId      -> "end-span"
+                        )
+
+                        @textInput(
+                            form("service"),
+                            false,
+                            '_sassClass   -> "cjww-input-group-addon",
+                            '_label       -> messages("pages.user-event.form.service.label"),
+                            '_inputType   -> "text",
+                            '_placeholder -> messages("pages.user-event.form.service.placeholder"),
+                            '_fieldName   -> "service",
+                            '_spanId      -> "service-span"
+                        )
+
+                        @textInput(
+                            form("sessionId"),
+                            false,
+                            '_sassClass   -> "cjww-input-group-addon",
+                            '_label       -> messages("pages.user-event.form.sessionId.label"),
+                            '_inputType   -> "text",
+                            '_placeholder -> messages("pages.user-event.form.sessionId.placeholder"),
+                            '_fieldName   -> "sessionId",
+                            '_spanId      -> "sessionId-span"
+                        )
+
+                        @textInput(
+                            form("requestId"),
+                            false,
+                            '_sassClass   -> "cjww-input-group-addon",
+                            '_label       -> messages("pages.user-event.form.requestId.label"),
+                            '_inputType   -> "text",
+                            '_placeholder -> messages("pages.user-event.form.requestId.placeholder"),
+                            '_fieldName   -> "requestId",
+                            '_spanId      -> "requestId-span"
+                        )
+
+                        @textInput(
+                            form("deviceId"),
+                            false,
+                            '_sassClass   -> "cjww-input-group-addon",
+                            '_label       -> messages("pages.user-event.form.deviceId.label"),
+                            '_inputType   -> "text",
+                            '_placeholder -> messages("pages.user-event.form.deviceId.placeholder"),
+                            '_fieldName   -> "deviceId",
+                            '_spanId      -> "deviceId-span"
+                        )
+
+                        @textInput(
+                            form("ipAddress"),
+                            false,
+                            '_sassClass   -> "cjww-input-group-addon",
+                            '_label       -> messages("pages.user-event.form.ipAddress.label"),
+                            '_inputType   -> "text",
+                            '_placeholder -> messages("pages.user-event.form.ipAddress.placeholder"),
+                            '_fieldName   -> "ipAddressId",
+                            '_spanId      -> "ipAddress-span"
+                        )
+
+                        @textInput(
+                            form("eventCodes"),
+                            false,
+                            '_sassClass   -> "cjww-input-group-addon",
+                            '_label       -> messages("pages.user-event.form.eventCodes.label"),
+                            '_inputType   -> "text",
+                            '_placeholder -> messages("pages.user-event.form.eventCodes.placeholder"),
+                            '_fieldName   -> "eventCodes",
+                            '_spanId      -> "event-codes-span"
+                        )
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> @messages("app.common.close")
+                        </button>
+
+                        <button type="submit" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span> @messages("app.common.search")
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 CJWW Development
+ * Copyright 2019 CJWW Development
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,9 @@ class ServiceBindings extends Module {
     bind(classOf[AdminConnector]).to(classOf[DefaultAdminConnector]).eagerly(),
     bind(classOf[ShutteringConnector]).to(classOf[DefaultShutteringConnector]).eagerly(),
     bind(classOf[FeatureSwitchConnector]).to(classOf[DefaultFeatureSwitchConnector]).eagerly(),
-    bind(classOf[HealthConnector]).to(classOf[DefaultHealthConnector]).eagerly()
+    bind(classOf[HealthConnector]).to(classOf[DefaultHealthConnector]).eagerly(),
+    bind(classOf[MessagingHubConnector]).to(classOf[DefaultMessagingHubConnector]).eagerly(),
+    bind(classOf[AccountsConnector]).to(classOf[DefaultAccountsConnector]).eagerly()
   )
 
   private def bindServices(): Seq[Binding[_]] = Seq(
@@ -47,7 +49,8 @@ class ServiceBindings extends Module {
     bind(classOf[ShutteringService]).to(classOf[DefaultShutteringService]).eagerly(),
     bind(classOf[FeatureSwitchService]).to(classOf[DefaultFeatureSwitchService]).eagerly(),
     bind(classOf[HealthService]).to(classOf[DefaultHealthService]).eagerly(),
-    bind(classOf[EncDecService]).to(classOf[DefaultEncDecService]).eagerly()
+    bind(classOf[EncDecService]).to(classOf[DefaultEncDecService]).eagerly(),
+    bind(classOf[EventLogService]).to(classOf[DefaultEventLogService]).eagerly()
   )
 
   private def bindControllers(): Seq[Binding[_]] = Seq(
@@ -58,6 +61,7 @@ class ServiceBindings extends Module {
     bind(classOf[AppIdController]).to(classOf[DefaultAppIdController]).eagerly(),
     bind(classOf[ShutteringController]).to(classOf[DefaultShutteringController]).eagerly(),
     bind(classOf[FeatureSwitchController]).to(classOf[DefaultFeatureSwitchController]).eagerly(),
-    bind(classOf[AppStateController]).to(classOf[DefaultAppStateController]).eagerly()
+    bind(classOf[AppStateController]).to(classOf[DefaultAppStateController]).eagerly(),
+    bind(classOf[UserEventLogController]).to(classOf[DefaultUserEventLogController]).eagerly()
   )
 }
