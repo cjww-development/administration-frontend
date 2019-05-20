@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 CJWW Development
+ * Copyright 2019 CJWW Development
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ object ThumbNails {
     val shutteringThumbs: List[Html]    = if(permissionGranted(shuttering)) List(ShutteringThumbnail()) else List()
     val featureSwitchThumbs: List[Html] = if(permissionGranted(featureSwitch)) List(FeatureSwitchThumbnail()) else List()
     val general: List[Html]             = List(UUIDThumbnail(), ServiceHealthThumbnail())
-    (rootThumbs ++ encDecThumbs ++ headerThumbs ++ shutteringThumbs ++ featureSwitchThumbs ++ general).grouped(4).toList
+    val eventLog: List[Html]            = if(permissionGranted(support)) List(UserEventLogThumbnail()) else List()
+    (rootThumbs ++ encDecThumbs ++ headerThumbs ++ shutteringThumbs ++ featureSwitchThumbs ++ general ++ eventLog).grouped(4).toList
   }
 }

@@ -35,6 +35,9 @@ POST    /feature-switching                 controllers.FeatureSwitchController.s
 
 GET     /service-health                    controllers.AppStateController.show()
 
+GET     /user-event-log                    controllers.UserEventLogController.show()
+POST    /user-event-log                    controllers.UserEventLogController.submit()
+
 GET     /sign-out                          controllers.LoginController.signOut()
 
 # Map static resources from the /public folder to the /assets URL path

@@ -16,7 +16,7 @@
 
 package helpers.services
 
-import helpers.connectors.MockAdminConnector
+import helpers.connectors.{MockAccountsConnector, MockAdminConnector, MockMessagingHubConnector}
 import helpers.other.{FutureAsserts, MockRequest}
 import org.scalatestplus.play.PlaySpec
 
@@ -24,4 +24,6 @@ trait ServiceSpec
   extends PlaySpec
     with FutureAsserts
     with MockAdminConnector
+    with MockAccountsConnector
+    with MockMessagingHubConnector
     with MockRequest

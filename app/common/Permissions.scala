@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 CJWW Development
+ * Copyright 2019 CJWW Development
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ object Permissions {
   val headers       = rootOnly ++ List("headers")
   val shuttering    = rootOnly ++ List("shuttering")
   val featureSwitch = rootOnly ++ List("featureSwitching")
+  val support       = rootOnly ++ List("support")
 
   def permissionGranted(pagePermissions: List[String])(implicit user: AccountDetails): Boolean = {
     (pagePermissions intersect user.permissions).nonEmpty

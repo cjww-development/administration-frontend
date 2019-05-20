@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 CJWW Development
+ * Copyright 2019 CJWW Development
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,11 +45,9 @@ trait Authorisation extends Logger {
     }
   }
 
-  protected def permissionsGuard(routePermissions: List[String])(f: => Future[Result])(implicit request: Request[_],
-                                                                                                user: AccountDetails,
-                                                                                                lang: Lang,
-                                                                                                links: Seq[NavBarLinkBuilder],
-                                                                                                navBarRoutes: Map[String, Call]): Future[Result] = {
+  protected def permissionsGuard(routePermissions: List[String])
+                                (f: => Future[Result])
+                                (implicit request: Request[_],user: AccountDetails, lang: Lang, links: Seq[NavBarLinkBuilder], navBarRoutes: Map[String, Call]): Future[Result] = {
     val permissionGranted = (user.permissions intersect routePermissions).nonEmpty
     if(permissionGranted) f else Future.successful(Forbidden(IncorrectPermissionsView()))
   }
